@@ -52,7 +52,6 @@ app.use("/api/v1", limiter);
 app.use("/api/v1/todo", authMiddleware, todoRoutes)
 app.use("/api/v1/auth", authRoutes)
 
-
 // Global Error Handler
 app.use(errorHandler);
 

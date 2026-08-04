@@ -1,6 +1,7 @@
 const User = require("../models/user.model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
 
 const login = async ({ email, password }) => {
   // Validate fields
@@ -8,7 +9,7 @@ const login = async ({ email, password }) => {
     throw new Error("Email and password are required");
   }
 
-  // Find user with password
+  // Find user
   const user = await User.findOne({
     email: email.trim().toLowerCase(),
   }).select("+password");
@@ -17,6 +18,16 @@ const login = async ({ email, password }) => {
     throw new Error("Invalid email or password");
   }
 
+  // Check if account is active
+  if (!user.isActive) {
+    throw new Error("Your account has been deactivated");
+  }
+
+  // Optional: Require email verification
+  // if (!user.isEmailVerified) {
+  //   throw new Error("Please verify your email before logging in");
+  // }
+
   // Compare password
   const isPasswordCorrect = await bcrypt.compare(password, user.password);
 
@@ -24,44 +35,66 @@ const login = async ({ email, password }) => {
     throw new Error("Invalid email or password");
   }
 
-  // Generate JWT
-  const token = jwt.sign(
+  // Generate Access Token
+  const accessToken = jwt.sign(
     {
-      id: user._id,
-      email: user.email,
+      userId: user._id,
       role: user.role,
     },
-    process.env.JWT_SECRET,
+    process.env.ACCESS_TOKEN_SECRET,
+    {
+      expiresIn: "15m",
+    },
+  );
+
+  // Generate Refresh Token
+  const refreshToken = jwt.sign(
+    {
+      userId: user._id,
+    },
+    process.env.REFRESH_TOKEN_SECRET,
     {
       expiresIn: "7d",
     },
   );
 
-  // Remove password before returning user
+  const hashedRefreshToken = crypto
+    .createHash("sha256")
+    .update(refreshToken)
+    .digest("hex");
+
+  // Save refresh token and login time
+  user.refreshToken = hashedRefreshToken;
+  user.lastLogin = new Date();
+
+  await user.save();
+
+  // Remove password
   user.password = undefined;
 
   return {
     user,
-    token,
+    accessToken,
+    refreshToken,
   };
 };
 
-const register = async ({ name, password, email, age, gender, role }) => {
-  // Required fields
-  if (
-    !name?.trim() ||
-    !password?.trim() ||
-    !email?.trim() ||
-    !age ||
-    !gender ||
-    !role
-  ) {
+const register = async ({
+  name,
+  email,
+  password,
+  age,
+  gender,
+  role = "user",
+}) => {
+  // Validate required fields
+  if (!name || !email || !password || !age || !gender) {
     throw new Error("All fields are required");
   }
 
-  // Check existing email
+  // Check if email already exists
   const existingUser = await User.findOne({
-    where: { email: email.trim().toLowerCase() },
+    email: email.trim().toLowerCase(),
   });
 
   if (existingUser) {
@@ -81,23 +114,83 @@ const register = async ({ name, password, email, age, gender, role }) => {
     role,
   });
 
-  // Generate token
-  const token = jwt.sign(
+  // Generate Access Token
+  const accessToken = jwt.sign(
     {
-      id: user.id,
-      email: user.email,
+      userId: user._id,
       role: user.role,
     },
-    process.env.JWT_SECRET,
+    process.env.ACCESS_TOKEN_SECRET,
+    {
+      expiresIn: "15m",
+    },
+  );
+
+  // Generate Refresh Token
+  const refreshToken = jwt.sign(
+    {
+      userId: user._id,
+    },
+    process.env.REFRESH_TOKEN_SECRET,
     {
       expiresIn: "7d",
     },
   );
 
-  return { user, token };
+  const hashedRefreshToken = crypto
+    .createHash("sha256")
+    .update(refreshToken)
+    .digest("hex");
+
+  user.refreshToken = hashedRefreshToken;
+  await user.save();
+
+  // Remove password before returning
+  user.password = undefined;
+
+  return {
+    user,
+    accessToken,
+    refreshToken,
+  };
+};
+
+const logout = async (refreshToken) => {
+  if (!refreshToken) {
+    return;
+  }
+
+  try {
+    // Verify refresh token
+    const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+
+    // Hash refresh token
+    const hashedRefreshToken = crypto
+      .createHash("sha256")
+      .update(refreshToken)
+      .digest("hex");
+
+    // Find user
+    const user = await User.findById(decoded.userId);
+
+    if (!user) {
+      return;
+    }
+
+    // Remove stored refresh token
+    if (user.refreshToken === hashedRefreshToken) {
+      user.refreshToken = null;
+      await user.save();
+    }
+  } catch (error) {
+    // Token invalid or expired
+    // Still allow logout
+    return;
+  }
 };
 
 module.exports = {
   login,
   register,
+  logout,
 };
