@@ -1,0 +1,36 @@
+node_modules/
+
+# Environment variables
+.env
+.env.*
+
+# Build files
+dist/
+build/
+
+# Logs
+logs/
+*.log
+
+# Coverage
+coverage/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Cache
+.cache/
+
+# TypeScript
+*.tsbuildinfo
+
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+terraform.tfvars%  
