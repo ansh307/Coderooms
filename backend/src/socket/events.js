@@ -8,4 +8,8 @@ module.exports = {
     USER_LEFT: "user-left",
 
     ONLINE_USERS: "online-users",
+
+    SEND_MESSAGE:"send-message",
+
+    RECEIVE_MESSAGE:"receive-message",
 };
