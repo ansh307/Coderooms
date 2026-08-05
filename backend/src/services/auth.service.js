@@ -40,6 +40,7 @@ const login = async ({ email, password }) => {
     {
       userId: user._id,
       role: user.role,
+      name: user.name,
     },
     process.env.ACCESS_TOKEN_SECRET,
     {
@@ -204,6 +205,7 @@ const refreshToken = async (refreshToken) => {
     {
       userId: user._id,
       role: user.role,
+      name: user.name,
     },
     process.env.ACCESS_TOKEN_SECRET,
     {

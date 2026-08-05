@@ -1,11 +1,21 @@
 require("dotenv").config();
+
+const http = require("http");
+
 const app = require("./src/app");
 const connectDB = require("./src/db/db");
 const logger = require("./src/config/logger");
+const initializeSocket = require("./src/socket");
 
 connectDB();
 
 const PORT = process.env.PORT || 5000;
+
+// Create HTTP server
+const server = http.createServer(app);
+
+// Initialize Socket.IO
+initializeSocket(server);
 
 process.on("uncaughtException", (error) => {
   logger.fatal(
@@ -29,17 +39,15 @@ process.on("unhandledRejection", (error) => {
   process.exit(1);
 });
 
-app.listen(PORT, () => {
-  // console.log("Server is running locally on port " + PORT);
+// Start HTTP server
+server.listen(PORT, () => {
   logger.info(
-  {
-    port: PORT,
-    environment: process.env.NODE_ENV,
-  },
-  "Server started"
-);
+    {
+      port: PORT,
+      environment: process.env.NODE_ENV,
+    },
+    "Server started",
+  );
 });
 
-
-
-module.exports = app;
+module.exports = server;

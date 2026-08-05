@@ -10,7 +10,6 @@ class ApiError extends Error {
   }
 }
 
-
 const joinRoom = async (roomId, userId) => {
   if (!mongoose.Types.ObjectId.isValid(roomId)) {
     throw new ApiError(400, "Invalid room id.");
@@ -75,7 +74,6 @@ const leaveRoom = async (roomId, userId) => {
   return true;
 };
 
-
 const getRoomMembers = async (roomId) => {
   if (!mongoose.Types.ObjectId.isValid(roomId)) {
     throw new ApiError(400, "Invalid room id.");
@@ -96,9 +94,26 @@ const getRoomMembers = async (roomId) => {
     });
 };
 
+const getMembership = async (roomId, userId) => {
+  if (!mongoose.Types.ObjectId.isValid(roomId)) {
+    throw new ApiError(400, "Invalid room id.");
+  }
+
+  return await RoomMember.findOne({
+    room: roomId,
+    user: userId,
+  });
+};
+
+const isMember = async (roomId, userId) => {
+  const membership = await getMembership(roomId, userId);
+  return !!membership;
+};
 
 module.exports = {
   joinRoom,
   leaveRoom,
   getRoomMembers,
+  getMembership,
+  isMember,
 };
