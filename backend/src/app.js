@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser");
 
 const todoRoutes = require('./routes/todo.routes.js');
 const roomRoutes = require('./routes/room.routes.js');
+const roomMemberRoutes = require('./routes/roomMember.routes.js');
 const authRoutes = require('./routes/auth.routes.js');
 
 const logger = require('./config/logger.js');
@@ -52,6 +53,7 @@ app.get("/metrics", async (req, res) => {
 app.use("/api/v1", limiter);
 app.use("/api/v1/todo", authMiddleware, todoRoutes)
 app.use("/api/v1/room", authMiddleware, roomRoutes)
+app.use("/api/v1/roomMember", authMiddleware, roomMemberRoutes)
 app.use("/api/v1/auth", authRoutes)
 
 // Global Error Handler
