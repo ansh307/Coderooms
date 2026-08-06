@@ -1,7 +1,7 @@
 const events = require("./events");
 
 const emitError = (socket, message, statusCode = 400) => {
-  socket.emit(events.ERROR, {
+  socket.emit(events.SOCKET_ERROR, {
     success: false,
     statusCode,
     message,
