@@ -1,6 +1,8 @@
 const roomService = require("../services/room.service");
 const roomMemberService = require("../services/roomMember.service");
 
+const persistence = require("./code.persistence");
+
 const presence = require("./presence.socket");
 const events = require("./events");
 
@@ -13,7 +15,7 @@ const joinRoom = async (io, socket, roomId) => {
 
     const isMember = await roomMemberService.isMember(
       roomId,
-      socket.user.userId
+      socket.user.userId,
     );
 
     if (!isMember) {
@@ -39,16 +41,13 @@ const joinRoom = async (io, socket, roomId) => {
       username: socket.user.name,
     });
 
-    io.to(roomId).emit(
-      events.ONLINE_USERS,
-      presence.getUsers(roomId)
-    );
+    io.to(roomId).emit(events.ONLINE_USERS, presence.getUsers(roomId));
   } catch (err) {
     emitError(socket, err.message);
   }
 };
 
-const leaveRoom = (io, socket, roomId) => {
+const leaveRoom = async (io, socket, roomId) => {
   if (!socket.joinedRooms.has(roomId)) return;
 
   socket.leave(roomId);
@@ -56,6 +55,10 @@ const leaveRoom = (io, socket, roomId) => {
   socket.joinedRooms.delete(roomId);
 
   presence.removeUser(roomId, socket.user.userId);
+
+  if (presence.getUsers(roomId).length === 0) {
+    await persistence.flush(roomId);
+  }
 
   logger.log(socket, "LEAVE_ROOM", {
     roomId,
@@ -66,16 +69,16 @@ const leaveRoom = (io, socket, roomId) => {
     username: socket.user.name,
   });
 
-  io.to(roomId).emit(
-    events.ONLINE_USERS,
-    presence.getUsers(roomId)
-  );
+  io.to(roomId).emit(events.ONLINE_USERS, presence.getUsers(roomId));
 };
 
-
-const disconnect = (io, socket) => {
+const disconnect = async (io, socket) => {
   for (const roomId of socket.joinedRooms) {
     presence.removeUser(roomId, socket.user.userId);
+
+    if (presence.getUsers(roomId).length === 0) {
+      await persistence.flush(roomId);
+    }
 
     logger.log(socket, "DISCONNECT", {
       roomId,
@@ -86,10 +89,7 @@ const disconnect = (io, socket) => {
       username: socket.user.name,
     });
 
-    io.to(roomId).emit(
-      events.ONLINE_USERS,
-      presence.getUsers(roomId)
-    );
+    io.to(roomId).emit(events.ONLINE_USERS, presence.getUsers(roomId));
   }
 
   socket.joinedRooms.clear();

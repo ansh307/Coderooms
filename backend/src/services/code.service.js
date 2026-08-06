@@ -97,8 +97,43 @@ const saveCode = async (roomId, userId, { content, language }) => {
   return code;
 };
 
+const updateCodeContent = async (
+  roomId,
+  userId,
+  content
+) => {
+  const isMember = await roomMemberService.isMember(
+    roomId,
+    userId
+  );
+
+  if (!isMember) {
+    throw new ApiError(
+      403,
+      "You are not a member of this room."
+    );
+  }
+
+  return await Code.findOneAndUpdate(
+    {
+      room: roomId,
+    },
+    {
+      content,
+      updatedBy: userId,
+      $inc: {
+        version: 1,
+      },
+    },
+    {
+     returnDocument: "after",
+    }
+  );
+};
+
 module.exports = {
   initializeCode,
   getCode,
   saveCode,
+  updateCodeContent
 };

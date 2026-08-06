@@ -6,6 +6,7 @@ const app = require("./src/app");
 const connectDB = require("./src/db/db");
 const logger = require("./src/config/logger");
 const initializeSocket = require("./src/socket");
+const persistence = require("./src/socket/code.persistence");
 
 connectDB();
 
@@ -37,6 +38,22 @@ process.on("unhandledRejection", (error) => {
   );
 
   process.exit(1);
+});
+
+process.on("SIGINT", async () => {
+  console.log("Flushing code cache...");
+
+  await persistence.flushAll();
+
+  process.exit(0);
+});
+
+process.on("SIGTERM", async () => {
+  console.log("Flushing code cache...");
+
+  await persistence.flushAll();
+
+  process.exit(0);
 });
 
 // Start HTTP server

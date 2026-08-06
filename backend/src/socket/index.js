@@ -3,6 +3,7 @@ const { Server } = require("socket.io");
 const authSocket = require("./auth.socket");
 const roomSocket = require("./room.socket");
 const chatSocket = require("./chat.socket");
+const codeSocket = require("./code.socket");
 
 let io;
 
@@ -20,6 +21,7 @@ function initializeSocket(server) {
 
     roomSocket(io, socket);
     chatSocket(io, socket);
+    codeSocket(io, socket);
     
     socket.on("disconnect", () => {
       console.log("Disconnected:", socket.id);

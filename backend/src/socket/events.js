@@ -1,15 +1,21 @@
 module.exports = {
-    JOIN_ROOM: "join-room",
+  // Room
+  JOIN_ROOM: "join-room",
+  LEAVE_ROOM: "leave-room",
+  USER_JOINED: "user-joined",
+  USER_LEFT: "user-left",
+  ONLINE_USERS: "online-users",
 
-    LEAVE_ROOM: "leave-room",
+  // Chat
+  SEND_MESSAGE: "send-message",
+  RECEIVE_MESSAGE: "receive-message",
 
-    USER_JOINED: "user-joined",
+  // Code
+  LOAD_CODE: "load-code",
+  CODE_LOADED: "code-loaded",
 
-    USER_LEFT: "user-left",
+  CODE_CHANGE: "code-change",
+  CODE_UPDATED: "code-updated",
 
-    ONLINE_USERS: "online-users",
-
-    SEND_MESSAGE:"send-message",
-
-    RECEIVE_MESSAGE:"receive-message",
+  SOCKET_ERROR: "socket-error",
 };
