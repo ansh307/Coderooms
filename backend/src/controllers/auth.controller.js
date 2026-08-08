@@ -1,5 +1,5 @@
 const authService = require("../services/auth.service.js");
-const { sendVerificationEmail } = require("../services/email.service.js");
+const { sendVerificationEmail, sendPasswordResetEmail } = require("../services/email.service.js");
 
 const login = async (req, res) => {
   try {
@@ -170,10 +170,17 @@ const forgotPassword = async (req, res) => {
   try {
     const { resetToken, user} = await authService.forgotPassword(req.body.email);
 
+  const resetUrl =
+      `${process.env.CLIENT_URL}/reset-password?token=${resetToken}`;
+
+    await sendPasswordResetEmail(
+      user.email,
+      resetUrl,
+    );
+
     return res.status(200).json({
       success: true,
-      message: "Password reset email sent.",
-      resetToken: resetToken
+      message: "Password reset email sent. Please check your inbox.",
     });
   } catch (error) {
     return res.status(400).json({

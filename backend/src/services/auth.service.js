@@ -284,6 +284,12 @@ const resetPassword = async ({ token, password }) => {
     throw new Error("Token and password are required");
   }
 
+  if (password.length < 8) {
+    throw new Error(
+      "Password must be at least 8 characters",
+    );
+  }
+
   const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
 
   const user = await User.findOne({
