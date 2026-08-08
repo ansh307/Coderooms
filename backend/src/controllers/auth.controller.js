@@ -55,7 +55,9 @@ const register = async (req, res) => {
     // await sendVerificationEmail(user.email, verificationUrl);
 
      const verificationUrl =
-      `${process.env.CLIENT_URL}/verify-email?token=${verificationToken}`;
+  `${process.env.CLIENT_URL}/verify-email?token=${verificationToken}&email=${encodeURIComponent(
+    user.email
+  )}`;
 
     await sendVerificationEmail(
       user.email,
@@ -231,6 +233,39 @@ const verifyEmail = async (req, res) => {
   }
 };
 
+const resendVerificationEmail = async (req, res) => {
+  try {
+    const { emailVerificationToken, user } =
+      await authService.resendVerificationEmail(
+        req.body.email
+      );
+
+    const verificationUrl =
+      `${process.env.CLIENT_URL}/verify-email?token=${emailVerificationToken}&email=${encodeURIComponent(user.email)}`;
+
+    await sendVerificationEmail(
+      user.email,
+      verificationUrl
+    );
+
+    return res.status(200).json({
+      success: true,
+      message:
+        "Verification email sent. Please check your inbox.",
+    });
+  } catch (error) {
+    console.error(
+      "Resend verification error:",
+      error
+    );
+
+    return res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   login,
   register,
@@ -239,5 +274,6 @@ module.exports = {
   getMe,
   forgotPassword,
   resetPassword,
-  verifyEmail
+  verifyEmail,
+  resendVerificationEmail,
 };

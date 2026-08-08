@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
+import * as authService from "@/services/auth.service";
 
 import Button from "@/components/auth/forms/Button";
 import { api } from "@/api";
@@ -12,7 +13,11 @@ export default function VerifyEmail() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  const email = searchParams.get("email");
+
   const verificationStarted = useRef(false);
+
+  const [resending, setResending] = useState(false);
 
   const [status, setStatus] = useState<"verifying" | "success" | "error">(
     "verifying",
@@ -81,6 +86,33 @@ export default function VerifyEmail() {
       }
     };
   }, [searchParams, router]);
+
+  const handleResendVerification = async () => {
+    if (!email) {
+      toast.error("Email address is missing. Please sign up again.");
+      return;
+    }
+
+    try {
+      setResending(true);
+
+      const response = await authService.resendVerificationEmail(email);
+
+      toast.success(
+        response?.message ||
+          "Verification email sent. Please check your inbox.",
+      );
+    } catch (error: any) {
+      console.error("Resend verification failed:", error);
+
+      toast.error(
+        error?.response?.data?.message ||
+          "Unable to resend verification email.",
+      );
+    } finally {
+      setResending(false);
+    }
+  };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-black px-4">
@@ -165,14 +197,15 @@ export default function VerifyEmail() {
             )}
           </div>
 
-          {/* Resend button only when verification fails */}
           {status === "error" && (
             <div className="mt-8">
               <Button
                 type="button"
-                className="h-11 w-full rounded-md bg-indigo-600 font-medium text-white transition hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/30"
+                onClick={handleResendVerification}
+                disabled={resending}
+                className="h-11 w-full rounded-md bg-indigo-600 font-medium text-white transition hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                Resend Verification Email
+                {resending ? "Sending..." : "Resend Verification Email"}
               </Button>
             </div>
           )}

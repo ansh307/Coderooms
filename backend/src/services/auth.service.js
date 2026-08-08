@@ -340,6 +340,48 @@ const verifyEmail = async (token) => {
   return user;
 };
 
+const resendVerificationEmail = async (email) => {
+  if (!email) {
+    throw new Error("Email is required");
+  }
+
+  const user = await User.findOne({
+    email: email.toLowerCase().trim(),
+  });
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  if (user.isEmailVerified) {
+    throw new Error("Email is already verified");
+  }
+
+  // Generate a new raw token
+  const emailVerificationToken = crypto
+    .randomBytes(32)
+    .toString("hex");
+
+  // Store only the hashed token
+  user.emailVerificationToken = crypto
+    .createHash("sha256")
+    .update(emailVerificationToken)
+    .digest("hex");
+
+  // Token expires in 15 minutes
+  user.emailVerificationExpires =
+    Date.now() + 15 * 60 * 1000;
+
+  await user.save({
+    validateBeforeSave: false,
+  });
+
+  return {
+    emailVerificationToken,
+    user,
+  };
+};
+
 module.exports = {
   login,
   register,
@@ -349,4 +391,5 @@ module.exports = {
   forgotPassword,
   resetPassword,
   verifyEmail,
+  resendVerificationEmail,
 };

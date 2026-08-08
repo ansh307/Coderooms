@@ -15,13 +15,15 @@ export default function LoginForm() {
   const [loading, setLoading] = useState(false);
   const setAuth = useAuthStore((state) => state.setAuth);
 
-  async function handleLogin(data: { email: string; password: string }) {
+  async function handleLogin(data: {
+    email: string;
+    password: string;
+  }): Promise<boolean> {
     try {
       setLoading(true);
 
       const result = await authService.login(data);
 
-      console.log(result);
       setAuth({ user: result.user, accessToken: result.accessToken });
       toast.success(result?.message || "Login successful. Redirecting....");
 
@@ -29,12 +31,14 @@ export default function LoginForm() {
         router.push("/test");
       }, 2000);
       // router.push("/test");
+      return true;
     } catch (error: any) {
       // alert(error.response?.data?.message);
       toast.error(
         error?.response?.data?.message ||
           "Something went wrong. Please try again.",
       );
+      return false;
     } finally {
       setLoading(false);
     }

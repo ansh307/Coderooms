@@ -13,7 +13,7 @@ type Mode = "login" | "signup";
 interface AuthFormProps {
   mode: Mode;
   loading?: boolean;
-  onSubmit: (values: any) => Promise<void>;
+  onSubmit: (values: any) => Promise<boolean>;
   emailSent?: boolean;
 }
 
@@ -62,11 +62,12 @@ export default function AuthForm({
           password: form.password,
         };
 
-    await onSubmit(payload);
+    const success = await onSubmit(payload);
 
-    setForm(initialForm);
+    if (success) {
+      setForm(initialForm);
+    }
   }
-
   return (
     <AuthCard>
       <form onSubmit={handleSubmit} className="space-y-6">

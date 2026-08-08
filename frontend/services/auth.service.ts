@@ -4,7 +4,9 @@ export const login = async (data: {
   email: string;
   password: string;
 }) => {
-  const response = await api.post("/auth/login", data);
+  const response = await api.post("/auth/login", data, {
+      skipAuthRefresh: true,
+    },);
   return response.data;
 };
 
@@ -15,14 +17,18 @@ export const signup = async (data: {
   age: number;
   gender: string;
 }) => {
-  const response = await api.post("/auth/signup", data);
+  const response = await api.post("/auth/signup", data, {
+      skipAuthRefresh: true,
+    },);
   return response.data;
 };
 
 export const forgotPassword = async (email: string) => {
   const response = await api.post("/auth/forgot-password", {
     email,
-  });
+  }, {
+      skipAuthRefresh: true,
+    },);
 
   return response.data;
 };
@@ -33,7 +39,25 @@ export const resetPassword = async (data: {
 }) => {
   const response = await api.post(
     "/auth/reset-password",
-    data,
+    data, {
+      skipAuthRefresh: true,
+    },
+  );
+
+  return response.data;
+};
+
+export const resendVerificationEmail = async (
+  email: string,
+) => {
+  const response = await api.post(
+    "/auth/resend-verification",
+    {
+      email,
+    },
+    {
+      skipAuthRefresh: true,
+    },
   );
 
   return response.data;
