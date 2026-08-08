@@ -123,7 +123,7 @@ const register = async ({
     password: hashedPassword,
     age,
     gender,
-    role,
+    role: "user",
 
     // Email verification
     isEmailVerified: false,

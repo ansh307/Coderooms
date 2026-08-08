@@ -2,7 +2,9 @@
 
 import { ReactNode, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { api } from "@/api";
+import { toast } from "sonner";
+
+import refreshApi from "@/api/refresh";
 import useAuthStore from "@/store/auth.store";
 
 interface AuthGuardProps {
@@ -13,39 +15,71 @@ interface RefreshResponse {
   accessToken: string;
 }
 
-export default function AuthGuard({
-  children,
-}: AuthGuardProps): React.ReactElement {
+type AuthStatus = "checking" | "authenticated" | "unauthenticated";
+
+export default function AuthGuard({ children }: AuthGuardProps) {
   const router = useRouter();
 
-  const accessToken = useAuthStore((state: any) => state.accessToken);
-  const setAccessToken = useAuthStore((state: any) => state.setAccessToken);
-
-  const [loading, setLoading] = useState<boolean>(true);
+  const [status, setStatus] = useState<AuthStatus>("checking");
 
   useEffect(() => {
-    const restoreSession = async (): Promise<void> => {
-      if (accessToken) {
-        setLoading(false);
+    let mounted = true;
+
+    const restoreSession = async () => {
+      const token = useAuthStore.getState().accessToken;
+
+      // Access token exists
+      if (token) {
+        if (mounted) {
+          setStatus("authenticated");
+        }
+
         return;
       }
 
+      // No access token.
+      // Try refresh token.
       try {
-        const res = await api.post<RefreshResponse>("/auth/refresh");
-        setAccessToken(res.data.accessToken);
+        const response =
+          await refreshApi.post<RefreshResponse>("/auth/refresh");
+
+        const newAccessToken = response.data.accessToken;
+
+        useAuthStore.getState().setAccessToken(newAccessToken);
+
+        if (mounted) {
+          setStatus("authenticated");
+        }
       } catch (error) {
-        console.error(error);
-        router.replace("/login");
-      } finally {
-        setLoading(false);
+        console.error("Failed to restore authentication:", error);
+        toast.error("Failed to restore authentication");
+        useAuthStore.getState().clearAuth();
+
+        if (mounted) {
+          setStatus("unauthenticated");
+        }
       }
     };
 
     restoreSession();
-  }, [accessToken, router, setAccessToken]);
 
-  if (loading) {
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.replace("/login");
+    }
+  }, [status, router]);
+
+  if (status === "checking") {
     return <div>Loading...</div>;
+  }
+
+  if (status === "unauthenticated") {
+    return <div>Redirecting...</div>;
   }
 
   return <>{children}</>;

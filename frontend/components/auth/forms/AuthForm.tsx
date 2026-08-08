@@ -14,23 +14,27 @@ interface AuthFormProps {
   mode: Mode;
   loading?: boolean;
   onSubmit: (values: any) => Promise<void>;
+  emailSent?: boolean;
 }
 
 export default function AuthForm({
   mode,
   loading = false,
   onSubmit,
+  emailSent = false,
 }: AuthFormProps) {
   const isSignup = mode === "signup";
 
-  const [form, setForm] = useState({
+  const initialForm = {
     name: "",
     email: "",
     password: "",
     age: "",
     gender: "",
     role: "user",
-  });
+  };
+
+  const [form, setForm] = useState(initialForm);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -59,6 +63,8 @@ export default function AuthForm({
         };
 
     await onSubmit(payload);
+
+    setForm(initialForm);
   }
 
   return (
@@ -164,6 +170,13 @@ export default function AuthForm({
           value={form.password}
           onChange={handleChange}
         />
+
+        {isSignup && emailSent && (
+          <p className="text-center text-xs text-zinc-500">
+            We&apos;ve sent you a verification link to your email address.
+            Please check your inbox and click the link to verify your account.
+          </p>
+        )}
 
         {!isSignup && (
           <div className="flex justify-end">

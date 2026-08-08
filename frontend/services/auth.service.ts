@@ -14,7 +14,6 @@ export const signup = async (data: {
   password: string;
   age: number;
   gender: string;
-  role?: string;
 }) => {
   const response = await api.post("/auth/signup", data);
   return response.data;

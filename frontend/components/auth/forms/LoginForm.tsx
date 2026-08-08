@@ -5,11 +5,15 @@ import { useRouter } from "next/navigation";
 import * as authService from "@/services/auth.service";
 
 import AuthForm from "@/components/auth/forms/AuthForm";
+import useAuthStore from "@/store/auth.store";
+
+import { toast } from "sonner";
 
 export default function LoginForm() {
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
+  const setAuth = useAuthStore((state) => state.setAuth);
 
   async function handleLogin(data: { email: string; password: string }) {
     try {
@@ -18,10 +22,19 @@ export default function LoginForm() {
       const result = await authService.login(data);
 
       console.log(result);
+      setAuth({ user: result.user, accessToken: result.accessToken });
+      toast.success(result?.message || "Login successful. Redirecting....");
 
-      router.push("/dashboard");
+      setTimeout(() => {
+        router.push("/test");
+      }, 2000);
+      // router.push("/test");
     } catch (error: any) {
-      alert(error.response?.data?.message);
+      // alert(error.response?.data?.message);
+      toast.error(
+        error?.response?.data?.message ||
+          "Something went wrong. Please try again.",
+      );
     } finally {
       setLoading(false);
     }

@@ -3,6 +3,7 @@
 import { api } from "@/api";
 import useAuthStore from "@/store/auth.store";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import React from "react";
 
 const TestingPage = () => {
@@ -13,8 +14,10 @@ const TestingPage = () => {
   const handleLogout = async () => {
     try {
       await api.post("/auth/logout");
+      toast.success("Logout successful. Redirecting....");
     } catch (error) {
       console.log(error);
+      toast.error("Something went wrong in logout. Please try again.");
     } finally {
       clearAuth();
       router.replace("/login");

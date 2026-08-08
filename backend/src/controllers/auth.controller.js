@@ -1,4 +1,5 @@
 const authService = require("../services/auth.service.js");
+const { sendVerificationEmail } = require("../services/email.service.js");
 
 const login = async (req, res) => {
   try {
@@ -53,6 +54,15 @@ const register = async (req, res) => {
     //
     // await sendVerificationEmail(user.email, verificationUrl);
 
+     const verificationUrl =
+      `${process.env.CLIENT_URL}/verify-email?token=${verificationToken}`;
+
+    await sendVerificationEmail(
+      user.email,
+      verificationUrl
+    );
+
+
     return res.status(201).json({
       success: true,
       message:
@@ -64,7 +74,7 @@ const register = async (req, res) => {
         age: user.age,
         gender: user.gender,
         role: user.role,
-        verificationToken:verificationToken,
+        // verificationToken:verificationToken,
         isEmailVerified: user.isEmailVerified,
       },
     });
@@ -191,7 +201,16 @@ const resetPassword = async (req, res) => {
 
 const verifyEmail = async (req, res) => {
   try {
-    await authService.verifyEmail(req.body.token);
+     const { token } = req.query;
+
+    if (!token) {
+      return res.status(400).json({
+        success: false,
+        message: "Verification token is required",
+      });
+    }
+
+    await authService.verifyEmail(token);
 
     return res.status(200).json({
       success: true,
