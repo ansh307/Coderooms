@@ -28,9 +28,9 @@ export default function LoginForm() {
       toast.success(result?.message || "Login successful. Redirecting....");
 
       setTimeout(() => {
-        router.push("/test");
+        router.push("/home");
       }, 2000);
-      // router.push("/test");
+      // router.push("/home");
       return true;
     } catch (error: any) {
       // alert(error.response?.data?.message);
