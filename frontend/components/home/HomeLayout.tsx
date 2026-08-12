@@ -36,7 +36,7 @@ export default function HomeLayout() {
   }, []);
 
   return (
-    <main className="h-screen overflow-hidden bg-[#0b0e13] p-[10px] text-white">
+    <main className="h-screen overflow-hidden bg-primary-foreground p-[10px] text-white">
       <div
         className={`
           grid h-full gap-[10px]
