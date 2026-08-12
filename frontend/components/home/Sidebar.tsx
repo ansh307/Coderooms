@@ -50,7 +50,7 @@ export default function Sidebar({ open, onToggle }: SidebarProps) {
    */
   if (!open) {
     return (
-      <aside className="flex h-full min-h-0 min-w-[60px] flex-col items-center overflow-hidden rounded-[16px] border border-[#262d3a] bg-surface py-4">
+      <aside className="flex h-full min-h-0 min-w-[60px] flex-col items-center overflow-hidden rounded-[16px] border border-border-color bg-surface py-4">
         {/* Logo / Open Sidebar */}
         <button
           onClick={onToggle}
@@ -92,7 +92,7 @@ export default function Sidebar({ open, onToggle }: SidebarProps) {
         </button>
 
         {/* Small divider */}
-        <div className="my-5 h-px w-6 bg-[#252b36]" />
+        <div className="my-5 h-px w-6 bg-borderborder-border-color" />
 
         {/* Active Room Only */}
         <button
@@ -170,9 +170,9 @@ export default function Sidebar({ open, onToggle }: SidebarProps) {
    * EXPANDED SIDEBAR
    */
   return (
-    <aside className="flex h-full min-h-0 flex-col overflow-hidden rounded-[16px] border border-[#262d3a] bg-surface">
+    <aside className="flex h-full min-h-0 flex-col overflow-hidden rounded-[16px] border border-border-color bg-surface">
       {/* Header */}
-      <div className="flex h-[94px] shrink-0 items-center border-b border-[#252b36] px-6">
+      <div className="flex h-[94px] shrink-0 items-center border-b border-border-color px-6">
         <div className="flex items-center gap-3">
           <div
             className="
@@ -200,7 +200,7 @@ export default function Sidebar({ open, onToggle }: SidebarProps) {
             rounded-[8px]
             text-[#858c9b]
             transition-all duration-200
-            hover:bg-[#191e29]
+            hover:bg-surface-muted
             hover:text-[#e5e7eb]
           "
           aria-label="Collapse sidebar"
@@ -256,16 +256,16 @@ export default function Sidebar({ open, onToggle }: SidebarProps) {
       </div>
 
       {/* Bottom Navigation */}
-      <div className="shrink-0 space-y-3 border-t border-[#252b36] p-4">
+      <div className="shrink-0 space-y-3 border-t border-border-color p-4">
         <button
           className="
             flex h-[65px] w-full
             items-center rounded-[12px]
-            border border-[#292f3b]
+            border border-border-color
             bg-surface
             px-5
             transition-colors
-            hover:bg-[#202532]
+            hover:bg-surface-muted
           "
         >
           <UsersRound size={18} className="text-[#e0e3eb]" />
@@ -281,11 +281,11 @@ export default function Sidebar({ open, onToggle }: SidebarProps) {
           className="
             flex h-[65px] w-full
             items-center rounded-[12px]
-            border border-[#292f3b]
+            border border-border-color
             bg-surface
             px-5
             transition-colors
-            hover:bg-[#202532]
+            hover:bg-surface-muted
           "
         >
           <Settings size={18} className="text-[#d9dde6]" />

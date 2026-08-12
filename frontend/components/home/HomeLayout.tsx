@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Menu, UsersRound, X } from "lucide-react";
+
 import Sidebar from "./Sidebar";
 import CodeEditor from "./CodeEditor";
 import MembersPanel from "./MembersPanel";
@@ -9,32 +11,239 @@ export default function HomeLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [membersOpen, setMembersOpen] = useState(true);
 
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(min-width: 1600px)");
+  const [isMobile, setIsMobile] = useState(false);
 
-    const handleChange = (event: MediaQueryListEvent) => {
-      if (event.matches) {
+  useEffect(() => {
+    const mobileQuery = window.matchMedia("(max-width: 767px)");
+    const desktopQuery = window.matchMedia("(min-width: 1600px)");
+
+    const updateLayout = () => {
+      const mobile = mobileQuery.matches;
+      const desktop = desktopQuery.matches;
+
+      setIsMobile(mobile);
+
+      if (mobile) {
+        // Mobile:
+        // Panels are completely hidden and opened as drawers.
+        setSidebarOpen(false);
+        setMembersOpen(false);
+      } else if (desktop) {
+        // Large desktop:
+        // Panels are fully expanded.
         setSidebarOpen(true);
         setMembersOpen(true);
       } else {
+        // Tablet / laptop:
+        // Panels become collapsed 60px rails.
         setSidebarOpen(false);
         setMembersOpen(false);
       }
     };
 
-    // Initial state
-    if (!mediaQuery.matches) {
-      setSidebarOpen(false);
-      setMembersOpen(false);
-    }
+    // Initial layout
+    updateLayout();
 
-    mediaQuery.addEventListener("change", handleChange);
+    mobileQuery.addEventListener("change", updateLayout);
+    desktopQuery.addEventListener("change", updateLayout);
 
     return () => {
-      mediaQuery.removeEventListener("change", handleChange);
+      mobileQuery.removeEventListener("change", updateLayout);
+      desktopQuery.removeEventListener("change", updateLayout);
     };
   }, []);
 
+  /*
+   * MOBILE
+   */
+  if (isMobile) {
+    return (
+      <main className="relative h-screen overflow-hidden bg-primary-foreground p-[6px] text-white">
+        {/* Editor */}
+        <div className="h-full w-full">
+          <CodeEditor />
+        </div>
+
+        {/* Mobile Sidebar Button */}
+        {!sidebarOpen && (
+          <button
+            onClick={() => setSidebarOpen(true)}
+            className="
+              fixed
+              left-6
+              top-6
+              z-40
+              flex
+              h-10
+              w-10
+              items-center
+              justify-center
+              rounded-[10px]
+              border
+              border-border-color
+              bg-surface-muted
+              text-[#d8dce5]
+              shadow-lg
+              backdrop-blur-md
+              transition-all
+            "
+            aria-label="Open sidebar"
+          >
+            <Menu size={20} />
+          </button>
+        )}
+
+        {/* Mobile Members Button */}
+        {!membersOpen && (
+          <button
+            onClick={() => setMembersOpen(true)}
+            className="
+              fixed
+              right-4
+              top-6
+              z-40
+              flex
+              h-10
+              w-11
+              items-center
+              justify-center
+              rounded-[10px]
+              bg-surface
+              text-[#d8dce5]
+              transition-all
+              hover:bg-surface-muted
+            "
+            aria-label="Open members panel"
+          >
+            <UsersRound size={19} />
+          </button>
+        )}
+
+        {/* Mobile Sidebar Overlay */}
+        {sidebarOpen && (
+          <>
+            {/* Backdrop */}
+            <div
+              className="
+                fixed
+                inset-0
+                z-40
+                bg-black/50
+                backdrop-blur-[2px]
+              "
+              onClick={() => setSidebarOpen(false)}
+            />
+
+            {/* Sidebar */}
+            <div
+              className="
+                fixed
+                bottom-2
+                left-2
+                top-2
+                z-50
+                w-[calc(100vw-24px)]
+                max-w-[360px]
+                animate-in
+                slide-in-from-left
+                duration-200
+              "
+            >
+              <Sidebar open={true} onToggle={() => setSidebarOpen(false)} />
+
+              {/* Mobile close */}
+              {/* <button
+                onClick={() => setSidebarOpen(false)}
+                className="
+                  absolute
+                  right-3
+                  top-3
+                  flex
+                  h-9
+                  w-9
+                  items-center
+                  justify-center
+                  rounded-lg
+                  bg-[#191e29]
+                  text-[#aeb4c0]
+                  hover:text-white
+                "
+                aria-label="Close sidebar"
+              >
+                <X size={19} />
+              </button> */}
+            </div>
+          </>
+        )}
+
+        {/* Mobile Members Overlay */}
+        {membersOpen && (
+          <>
+            {/* Backdrop */}
+            <div
+              className="
+                fixed
+                inset-0
+                z-40
+                bg-black/50
+                backdrop-blur-[2px]
+              "
+              onClick={() => setMembersOpen(false)}
+            />
+
+            {/* Members Panel */}
+            <div
+              className="
+                fixed
+                bottom-2
+                right-2
+                top-2
+                z-50
+                w-[calc(100vw-24px)]
+                max-w-[360px]
+                animate-in
+                slide-in-from-right
+                duration-200
+              "
+            >
+              <MembersPanel
+                open={true}
+                onToggle={() => setMembersOpen(false)}
+              />
+
+              {/* Mobile close */}
+              {/* <button
+                onClick={() => setMembersOpen(false)}
+                className="
+                  absolute
+                  right-3
+                  top-3
+                  flex
+                  h-9
+                  w-9
+                  items-center
+                  justify-center
+                  rounded-lg
+                  bg-[#191e29]
+                  text-[#aeb4c0]
+                  hover:text-white
+                "
+                aria-label="Close members panel"
+              >
+                <X size={19} />
+              </button> */}
+            </div>
+          </>
+        )}
+      </main>
+    );
+  }
+
+  /*
+   * DESKTOP / TABLET
+   *
+   * This part stays exactly the same.
+   */
   return (
     <main className="h-screen overflow-hidden bg-primary-foreground p-[10px] text-white">
       <div

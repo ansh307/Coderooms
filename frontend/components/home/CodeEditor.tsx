@@ -7,13 +7,18 @@ export default function CodeEditor() {
   const [code, setCode] = useState("");
 
   return (
-    <section className="flex min-w-0 flex-col overflow-hidden rounded-[16px] border border-[#262d3a] bg-surface">
+    <section className="flex min-w-0 flex-col overflow-hidden rounded-[16px] border border-border-color bg-surface">
       {/* Editor header */}
-      <header className="flex h-[79px] shrink-0 items-center border-b border-[#252b36] px-7">
-        <div className="flex h-full items-center gap-3 px-2">
+      <header className="flex h-[79px] shrink-0 items-center border-b border-border-color px-7">
+        <div className="flex h-full items-center gap-3 px-2 pl-11 md:pl-2">
           <Code2 size={23} className="text-green-accent" strokeWidth={2.3} />
 
-          <span className="text-[21px] font-medium text-[#eceef4]">Code</span>
+          <span className="text-[21px] font-medium text-[#eceef4] hidden md:block">
+            Code
+          </span>
+          <span className="text-[21px] font-medium text-[#eceef4] block md:hidden">
+            Coderooms
+          </span>
         </div>
 
         <div className="ml-auto flex items-center gap-5">
@@ -34,10 +39,10 @@ export default function CodeEditor() {
       </header>
 
       {/* Editor */}
-      <div className="relative min-h-0 flex-1 overflow-hidden">
+      <div className="relative min-h-[81vh] flex-1 overflow-hidden">
         <div className="absolute inset-0 flex">
           {/* Line numbers */}
-          <div className="w-[72px] shrink-0 border-r border-[#222832] pt-[30px] text-center">
+          <div className="w-[72px] shrink-0 border-r border-border-color pt-[30px] text-center">
             <span className="font-mono text-[17px] text-[#858c9b]">1</span>
           </div>
 
@@ -69,7 +74,7 @@ export default function CodeEditor() {
       </div>
 
       {/* Status bar */}
-      <footer className="flex h-[79px] shrink-0 items-center border-t border-[#252b36] px-7">
+      <footer className="flex h-[79px] shrink-0 items-center border-t border-border-color px-7">
         <span className="font-mono text-[15px] text-[#aeb4c0]">
           Ln 1, Col 1
         </span>

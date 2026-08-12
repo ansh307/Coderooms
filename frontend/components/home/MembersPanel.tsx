@@ -22,7 +22,7 @@ export default function MembersPanel({ open, onToggle }: MembersPanelProps) {
    */
   if (!open) {
     return (
-      <aside className="flex h-full min-h-0 min-w-[60px] flex-col items-center overflow-hidden rounded-[16px] border border-[#262d3a] bg-surface py-4">
+      <aside className="flex h-full min-h-0 min-w-[60px] flex-col items-center overflow-hidden rounded-[16px] border border-border-color bg-surface py-4">
         {/* Open Panel */}
         <button
           onClick={onToggle}
@@ -111,15 +111,15 @@ export default function MembersPanel({ open, onToggle }: MembersPanelProps) {
    * EXPANDED
    */
   return (
-    <aside className="flex h-full min-w-0 flex-col overflow-hidden rounded-[16px] border border-[#262d3a] bg-surface">
+    <aside className="flex h-full min-w-0 flex-col overflow-hidden rounded-[16px] border border-border-color bg-surface">
       {/* Tabs */}
-      <div className="flex h-[74px] shrink-0 border-b border-[#252b36]">
+      <div className="flex h-[74px] shrink-0 border-b border-border-color">
         {/* Members */}
         <button
           onClick={() => setActiveTab("members")}
           className={[
             "relative flex flex-1 items-center justify-center",
-            "text-[21px] font-medium transition-colors",
+            "text-[19px] font-medium transition-colors",
             activeTab === "members"
               ? "text-green-accent"
               : "text-green-accent hover:text-green-accent-muted",
@@ -127,7 +127,7 @@ export default function MembersPanel({ open, onToggle }: MembersPanelProps) {
         >
           Members
           {activeTab === "members" && (
-            <span className="absolute bottom-0 left-4 right-4 h-[3px] rounded-full bg-green-accent" />
+            <span className="absolute bottom-0 left-4 right-4 h-[2px] rounded-full bg-green-accent" />
           )}
         </button>
 
@@ -136,7 +136,7 @@ export default function MembersPanel({ open, onToggle }: MembersPanelProps) {
           onClick={() => setActiveTab("chats")}
           className={[
             "relative flex flex-1 items-center justify-center",
-            "text-[21px] font-medium transition-colors",
+            "text-[19px] font-medium transition-colors",
             activeTab === "chats"
               ? "text-green-accent"
               : "text-green-accent hover:text-green-accent-muted",
@@ -144,7 +144,7 @@ export default function MembersPanel({ open, onToggle }: MembersPanelProps) {
         >
           Chats
           {activeTab === "chats" && (
-            <span className="absolute bottom-0 left-4 right-4 h-[3px] rounded-full bg-green-accent" />
+            <span className="absolute bottom-0 left-4 right-4 h-[2px] rounded-full bg-green-accent" />
           )}
         </button>
 
