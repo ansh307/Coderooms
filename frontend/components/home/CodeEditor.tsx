@@ -79,8 +79,10 @@ export default function CodeEditor() {
       socket.emit("load-code", {
         roomId: activeRoom._id,
       });
+
+      toast.success("Room joined successfully");
     } catch (error: any) {
-      console.error("Failed to join room:", error);
+      // console.error("Failed to join room:", error);
       toast.error("Failed to join room");
 
       setError(error?.response?.data?.message || "Failed to join CodeRoom.");
@@ -159,7 +161,7 @@ export default function CodeEditor() {
       statusCode?: number;
     }) => {
       // console.error("Socket error:", error);
-      toast.error("Socket error");
+      // toast.error("Socket error");
       if (
         error.statusCode === 403 &&
         error.message === "You are not a member of this room."

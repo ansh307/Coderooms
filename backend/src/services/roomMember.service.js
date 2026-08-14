@@ -106,7 +106,7 @@ const getRoomMembers = async (roomId) => {
   return RoomMember.find({
     room: roomId,
   })
-    .populate("user", "username avatar")
+    .populate("user", "name")
     .sort({
       joinedAt: 1,
     });

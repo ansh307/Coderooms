@@ -60,7 +60,7 @@ export const useRoomStore = create<RoomStore>((set) => ({
         ? rooms.find(
             (room) => room._id === state.activeRoom?._id
           ) ?? null
-        : (rooms[0] ?? null),
+        : null,
     })),
 
   setActiveRoom: (room) =>

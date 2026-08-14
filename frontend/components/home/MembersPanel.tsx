@@ -7,15 +7,71 @@ import {
   PanelRightOpen,
   PanelRightClose,
 } from "lucide-react";
-import { useState } from "react";
+
+import { useEffect, useState } from "react";
+import { api } from "@/api";
+import { useRoomStore } from "@/store/room.store";
 
 interface MembersPanelProps {
   open: boolean;
   onToggle: () => void;
 }
 
+interface RoomMember {
+  _id: string;
+  user: {
+    _id: string;
+    name: string;
+  };
+  role: "owner" | "admin" | "member";
+  status: "active" | "left" | "banned";
+  joinedAt: string;
+}
+
 export default function MembersPanel({ open, onToggle }: MembersPanelProps) {
   const [activeTab, setActiveTab] = useState<"members" | "chats">("members");
+
+  const activeRoom = useRoomStore((state) => state.activeRoom);
+
+  const [members, setMembers] = useState<RoomMember[]>([]);
+  const [membersLoading, setMembersLoading] = useState(false);
+  const [membersError, setMembersError] = useState<string | null>(null);
+
+  /*
+   * Fetch members
+   */
+
+  useEffect(() => {
+    if (!activeRoom) {
+      setMembers([]);
+      return;
+    }
+
+    const fetchMembers = async () => {
+      try {
+        setMembersLoading(true);
+        setMembersError(null);
+
+        const response = await api.get(
+          `/roomMember/rooms/${activeRoom._id}/members`,
+        );
+
+        setMembers(response.data.data ?? response.data ?? []);
+      } catch (error: any) {
+        console.error("Failed to fetch room members:", error);
+
+        setMembersError(
+          error?.response?.data?.message || "Failed to load members.",
+        );
+
+        setMembers([]);
+      } finally {
+        setMembersLoading(false);
+      }
+    };
+
+    fetchMembers();
+  }, [activeRoom]);
 
   /*
    * COLLAPSED
@@ -170,41 +226,101 @@ export default function MembersPanel({ open, onToggle }: MembersPanelProps) {
       </div>
 
       {/* Content */}
-      <div className="flex flex-1 items-center justify-center px-8">
+      <div className="flex flex-1 items-center ">
         {activeTab === "members" ? (
-          <div className="flex flex-col items-center text-center">
-            <div className="mb-5 flex h-16 w-16 items-center justify-center">
-              <UsersRound
-                size={53}
-                strokeWidth={1.7}
-                className="text-green-accent"
-              />
+          <div className="flex h-full min-h-0 flex-col w-full">
+            {/* Members header */}
+            <div className="flex shrink-0 items-center justify-between border-b border-border-color px-5 py-4">
+              <div>
+                <h2 className="text-[15px] font-medium text-[#e4e6ec]">
+                  Room Members
+                </h2>
+
+                <p className="mt-1 text-[12px] text-[#777f8e]">
+                  {members.length} member{members.length !== 1 ? "s" : ""}
+                </p>
+              </div>
+
+              <button
+                className="
+                  flex h-9 w-9
+                  items-center justify-center
+                  rounded-[8px]
+                  text-[#858c9b]
+                  transition-colors
+                  hover:bg-surface-muted
+                  hover:text-white
+                "
+                title="Invite members"
+              >
+                <UserPlus size={18} strokeWidth={1.8} />
+              </button>
             </div>
 
-            <h2 className="max-w-[270px] text-[27px] font-semibold leading-[1.35] tracking-[-0.02em] text-[#dce0e8]">
-              Invite people to
-              <br />
-              start chat
-            </h2>
+            {/* Members list */}
+            <div className="min-h-0 flex-1 overflow-y-auto p-3">
+              {membersLoading ? (
+                <div className="flex h-full items-center justify-center">
+                  <p className="text-[13px] text-[#858c9b]">
+                    Loading members...
+                  </p>
+                </div>
+              ) : membersError ? (
+                <div className="flex h-full items-center justify-center px-5 text-center">
+                  <p className="text-[13px] text-red-400">{membersError}</p>
+                </div>
+              ) : members.length === 0 ? (
+                <div className="flex h-full items-center justify-center px-5 text-center">
+                  <div>
+                    <UsersRound
+                      size={36}
+                      strokeWidth={1.6}
+                      className="mx-auto text-[#505866]"
+                    />
 
-            <button
-              className="
-                mt-6 flex h-[56px]
-                items-center gap-3
-                rounded-[11px]
-                border border-border-color
-                bg-green-accent-muted
-                px-6
-                text-[16px]
-                font-medium
-                text-white
-                transition-all
-                hover:brightness-110
-              "
-            >
-              <UserPlus size={21} strokeWidth={1.8} />
-              Invite Members
-            </button>
+                    <p className="mt-4 text-[14px] text-[#858c9b]">
+                      No members found.
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-1">
+                  {members.map((member) => (
+                    <div
+                      key={member._id}
+                      className="
+                      flex items-center gap-3
+                      rounded-[10px]
+                      px-3 py-3
+                      transition-colors
+                      hover:bg-surface-muted
+                    "
+                    >
+                      {/* Avatar */}
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-green-accent-muted">
+                        <span className="text-[13px] font-medium text-white">
+                          {member?.user?.name?.charAt(0).toUpperCase()}
+                        </span>
+                      </div>
+
+                      {/* User info */}
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-[14px] font-medium text-[#dfe2e8]">
+                          {member?.user?.name}
+                        </p>
+
+                        <p className="mt-0.5 text-[11px] capitalize text-[#777f8e]">
+                          {member?.role}
+                        </p>
+                      </div>
+
+                      {/* Online indicator */}
+                      <span className="h-2 w-2 shrink-0 rounded-full bg-[#65c97b]" />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         ) : (
           <div className="flex flex-col items-center text-center">
