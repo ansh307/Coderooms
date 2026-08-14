@@ -32,7 +32,7 @@ const getMessages = async (roomId, page = 1, limit = 30) => {
   return Message.find({
     room: roomId,
   })
-    .populate("sender", "name username avatar")
+    .populate("sender", "name")
     .sort({
       createdAt: -1,
     })

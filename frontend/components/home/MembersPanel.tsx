@@ -8,9 +8,13 @@ import {
   PanelRightClose,
 } from "lucide-react";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { api } from "@/api";
+
+import { getSocket } from "@/socket/socket";
+import useAuthStore from "@/store/auth.store";
 import { useRoomStore } from "@/store/room.store";
+import { toast } from "sonner";
 
 interface MembersPanelProps {
   open: boolean;
@@ -28,17 +32,34 @@ interface RoomMember {
   joinedAt: string;
 }
 
+interface ChatMessage {
+  _id: string;
+  room: string;
+  content: string;
+  sender: {
+    _id: string;
+    name: string;
+  };
+  createdAt: string;
+}
+
 export default function MembersPanel({ open, onToggle }: MembersPanelProps) {
   const [activeTab, setActiveTab] = useState<"members" | "chats">("members");
 
   const activeRoom = useRoomStore((state) => state.activeRoom);
+
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [messageInput, setMessageInput] = useState("");
+  const [messagesLoading, setMessagesLoading] = useState(false);
+
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const [members, setMembers] = useState<RoomMember[]>([]);
   const [membersLoading, setMembersLoading] = useState(false);
   const [membersError, setMembersError] = useState<string | null>(null);
 
   /*
-   * Fetch members
+   * Fetch members And Fetch Messages
    */
 
   useEffect(() => {
@@ -70,8 +91,115 @@ export default function MembersPanel({ open, onToggle }: MembersPanelProps) {
       }
     };
 
+    const fetchMessages = async () => {
+      try {
+        setMessagesLoading(true);
+
+        const response = await api.get(`/rooms/${activeRoom._id}/messages`);
+
+        setMessages(response.data.data ?? response.data ?? []);
+      } catch (error: any) {
+        console.error("Failed to load messages:", error);
+
+        toast.error(
+          error?.response?.data?.message || "Failed to load messages",
+        );
+
+        setMessages([]);
+      } finally {
+        setMessagesLoading(false);
+      }
+    };
+
+    fetchMessages();
     fetchMembers();
   }, [activeRoom]);
+
+  /*
+   * ReceiveMessage and
+   */
+
+  useEffect(() => {
+    if (!activeRoom) return;
+
+    const token = useAuthStore.getState().accessToken;
+
+    if (!token) return;
+
+    const socket = getSocket(token);
+
+    const handleReceiveMessage = (message: ChatMessage) => {
+      if (message.room !== activeRoom._id) {
+        return;
+      }
+
+      setMessages((prev) => {
+        // Prevent duplicate messages
+        if (prev.some((item) => item._id === message._id)) {
+          return prev;
+        }
+
+        return [...prev, message];
+      });
+    };
+
+    socket.on("receive-message", handleReceiveMessage);
+
+    return () => {
+      socket.off("receive-message", handleReceiveMessage);
+    };
+  }, [activeRoom]);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({
+      behavior: "smooth",
+    });
+  }, [messages]);
+
+  /*
+   * handleSendMessage
+   */
+
+  const handleSendMessage = () => {
+    const content = messageInput.trim();
+
+    if (!content || !activeRoom) {
+      return;
+    }
+
+    const token = useAuthStore.getState().accessToken;
+
+    if (!token) {
+      toast.error("Authentication required");
+      return;
+    }
+
+    const socket = getSocket(token);
+
+    if (!socket.connected) {
+      toast.error("Not connected to room");
+      return;
+    }
+
+    socket.emit("send-message", {
+      roomId: activeRoom._id,
+      content,
+    });
+
+    setMessageInput("");
+  };
+
+  /*
+   * support Enter
+   */
+  const handleMessageKeyDown = (
+    event: React.KeyboardEvent<HTMLInputElement>,
+  ) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      handleSendMessage();
+    }
+  };
 
   /*
    * COLLAPSED
@@ -323,20 +451,123 @@ export default function MembersPanel({ open, onToggle }: MembersPanelProps) {
             </div>
           </div>
         ) : (
-          <div className="flex flex-col items-center text-center">
-            <MessageCircle
-              size={52}
-              strokeWidth={1.6}
-              className="mb-5 text-green-accent"
-            />
+          <div className="flex h-full min-h-0 flex-col w-full">
+            {/* Chat header */}
+            <div className="shrink-0 border-b border-border-color px-5 py-4">
+              <h2 className="text-[15px] font-medium text-[#e4e6ec]">
+                Room Chat
+              </h2>
 
-            <h2 className="text-[23px] font-semibold text-[#dce0e8]">
-              No conversations
-            </h2>
+              <p className="mt-1 text-[12px] text-[#777f8e]">
+                Chat with your room members
+              </p>
+            </div>
 
-            <p className="mt-2 max-w-[250px] text-[14px] leading-6 text-[#858c9b]">
-              Start a conversation with your room members.
-            </p>
+            {/* Messages */}
+            <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
+              {messagesLoading ? (
+                <div className="flex h-full items-center justify-center">
+                  <p className="text-[13px] text-[#858c9b]">
+                    Loading messages...
+                  </p>
+                </div>
+              ) : messages.length === 0 ? (
+                <div className="flex h-full flex-col items-center justify-center text-center">
+                  <MessageCircle
+                    size={38}
+                    strokeWidth={1.6}
+                    className="text-[#505866]"
+                  />
+
+                  <p className="mt-4 text-[14px] font-medium text-[#dce0e8]">
+                    No messages yet
+                  </p>
+
+                  <p className="mt-1 max-w-[220px] text-[12px] leading-5 text-[#777f8e]">
+                    Start a conversation with your room members.
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {messages.map((message) => (
+                    <div key={message._id} className="flex gap-3">
+                      {/* Avatar */}
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-green-accent-muted">
+                        <span className="text-[12px] font-medium text-white">
+                          {message.sender.name?.charAt(0).toUpperCase()}
+                        </span>
+                      </div>
+
+                      {/* Message */}
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-baseline justify-between gap-2">
+                          <span className="truncate text-[13px] font-medium text-[#dfe2e8]">
+                            {message.sender.name}
+                          </span>
+
+                          <span className="shrink-0 text-[10px] text-[#626a78]">
+                            {new Date(message.createdAt).toLocaleTimeString(
+                              [],
+                              {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              },
+                            )}
+                          </span>
+                        </div>
+
+                        <p className="mt-1 break-words text-[13px] leading-5 text-[#aeb4c0]">
+                          {message.content}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+
+                  <div ref={messagesEndRef} />
+                </div>
+              )}
+            </div>
+
+            {/* Message input */}
+            <div className="shrink-0 border-t border-border-color p-3">
+              <div className="flex items-center gap-2 rounded-[10px] border border-border-color bg-surface-muted px-3">
+                <input
+                  type="text"
+                  value={messageInput}
+                  onChange={(event) => setMessageInput(event.target.value)}
+                  onKeyDown={handleMessageKeyDown}
+                  placeholder="Message room..."
+                  className="
+                    min-w-0 flex-1
+                    bg-transparent
+                    py-3
+                    text-[13px]
+                    text-[#e4e6ec]
+                    outline-none
+                    placeholder:text-[#626a78]
+                  "
+                />
+
+                <button
+                  onClick={handleSendMessage}
+                  disabled={!messageInput.trim()}
+                  className="
+                    flex h-8 w-8 shrink-0
+                    items-center justify-center
+                    rounded-[7px]
+                    bg-green-accent
+                    text-white
+                    transition-opacity
+                    hover:opacity-90
+                    disabled:pointer-events-none
+                    disabled:opacity-30
+                  "
+                  aria-label="Send message"
+                >
+                  <MessageCircle size={16} strokeWidth={1.8} />
+                </button>
+              </div>
+            </div>
           </div>
         )}
       </div>
