@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 
 module.exports = (socket, next) => {
     try {
-        const token = socket.handshake.headers.token;
+         const token = socket.handshake.auth.token;
 
         if (!token) {
             return next(new Error("Unauthorized: No token"));

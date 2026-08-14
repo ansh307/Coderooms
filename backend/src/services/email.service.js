@@ -11,7 +11,7 @@ const transporter = nodemailer.createTransport({
 });
 const sendVerificationEmail = async (email, verificationUrl) => {
   await transporter.sendMail({
-    from: `onboarding@resend.dev`,
+    from: `CodeRooms <noreply@anshjz.in>`,
     to: email,
     subject: "Verify your email address",
     html: `
@@ -64,7 +64,7 @@ const sendVerificationEmail = async (email, verificationUrl) => {
 
 const sendPasswordResetEmail = async (email, resetUrl) => {
   await transporter.sendMail({
-    from: `"onboarding@resend.dev`,
+    from: `"CodeRooms <noreply@anshjz.in>`,
     to: email,
     subject: "Reset your CodeRooms password",
     html: `
