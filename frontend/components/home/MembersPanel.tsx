@@ -220,6 +220,7 @@ export default function MembersPanel({ open, onToggle }: MembersPanelProps) {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({
       behavior: "smooth",
+      block: "end",
     });
   }, [messages]);
 
@@ -421,9 +422,9 @@ export default function MembersPanel({ open, onToggle }: MembersPanelProps) {
       </div>
 
       {/* Content */}
-      <div className="flex flex-1 items-center ">
+      <div className="flex min-h-0 flex-1">
         {activeTab === "members" ? (
-          <div className="flex h-full min-h-0 flex-col w-full">
+          <div className="flex min-h-0 flex-1 w-full flex-col">
             {/* Members header */}
             <div className="flex shrink-0 items-center justify-between border-b border-border-color px-5 py-4">
               <div>
@@ -518,7 +519,7 @@ export default function MembersPanel({ open, onToggle }: MembersPanelProps) {
             </div>
           </div>
         ) : (
-          <div className="flex h-full min-h-0 flex-col w-full">
+          <div className="flex min-h-0 flex-1 w-full flex-col">
             {/* Chat header */}
             <div className="shrink-0 border-b border-border-color px-5 py-4">
               <h2 className="text-[15px] font-medium text-[#e4e6ec]">
@@ -531,7 +532,7 @@ export default function MembersPanel({ open, onToggle }: MembersPanelProps) {
             </div>
 
             {/* Messages */}
-            <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4">
               {messagesLoading ? (
                 <div className="flex h-full items-center justify-center">
                   <p className="text-[13px] text-[#858c9b]">

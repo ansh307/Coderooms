@@ -64,7 +64,7 @@ const getMessages = async (roomId, page = 1, limit = 30, userId) => {
   })
     .populate("sender", "name")
     .sort({
-      createdAt: -1,
+      createdAt: 1,
     })
     .skip((page - 1) * limit)
     .limit(limit);
