@@ -3,9 +3,9 @@
 import { useEffect, useState } from "react";
 import { Menu, UsersRound, X } from "lucide-react";
 
-import Sidebar from "./Sidebar";
-import CodeEditor from "./CodeEditor";
-import MembersPanel from "./MembersPanel";
+import Sidebar from "./sidebar/Sidebar";
+import CodeEditor from "./code-editor/CodeEditor";
+import MembersPanel from "./members-panel/MembersPanel";
 
 export default function HomeLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -150,28 +150,6 @@ export default function HomeLayout() {
               "
             >
               <Sidebar open={true} onToggle={() => setSidebarOpen(false)} />
-
-              {/* Mobile close */}
-              {/* <button
-                onClick={() => setSidebarOpen(false)}
-                className="
-                  absolute
-                  right-3
-                  top-3
-                  flex
-                  h-9
-                  w-9
-                  items-center
-                  justify-center
-                  rounded-lg
-                  bg-[#191e29]
-                  text-[#aeb4c0]
-                  hover:text-white
-                "
-                aria-label="Close sidebar"
-              >
-                <X size={19} />
-              </button> */}
             </div>
           </>
         )}
@@ -210,28 +188,6 @@ export default function HomeLayout() {
                 open={true}
                 onToggle={() => setMembersOpen(false)}
               />
-
-              {/* Mobile close */}
-              {/* <button
-                onClick={() => setMembersOpen(false)}
-                className="
-                  absolute
-                  right-3
-                  top-3
-                  flex
-                  h-9
-                  w-9
-                  items-center
-                  justify-center
-                  rounded-lg
-                  bg-[#191e29]
-                  text-[#aeb4c0]
-                  hover:text-white
-                "
-                aria-label="Close members panel"
-              >
-                <X size={19} />
-              </button> */}
             </div>
           </>
         )}
