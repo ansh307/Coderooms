@@ -28,7 +28,7 @@ interface RoomStore {
   rooms: Room[];
   activeRoom: Room | null;
 
-  joinedRooms: Record<string, boolean>;
+  joinedRooms: Record<string, boolean | null>;
   membershipLoading: Record<string, boolean>;
 
   setRoomJoined: (roomId: string) => void;

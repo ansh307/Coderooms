@@ -22,11 +22,14 @@ export default function CodeEditor() {
     (state) => state.setMembershipLoading,
   );
 
-  const isMember = activeRoom ? joinedRooms[activeRoom._id] === true : false;
+  const roomMembership = activeRoom ? joinedRooms[activeRoom._id] : undefined;
 
-  const isCheckingMembership = activeRoom
-    ? membershipLoading[activeRoom._id] === true
-    : false;
+  const isMember = roomMembership === true;
+
+  const isCheckingMembership =
+    activeRoom &&
+    (roomMembership === undefined ||
+      membershipLoading[activeRoom._id] === true);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

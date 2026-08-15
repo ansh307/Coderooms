@@ -65,11 +65,14 @@ export default function MembersPanel({ open, onToggle }: MembersPanelProps) {
   const [membersLoading, setMembersLoading] = useState(false);
   const [membersError, setMembersError] = useState<string | null>(null);
 
-  const isMember = activeRoom ? joinedRooms[activeRoom._id] === true : false;
+  const roomMembership = activeRoom ? joinedRooms[activeRoom._id] : undefined;
 
-  const isCheckingMembership = activeRoom
-    ? membershipLoading[activeRoom._id] === true
-    : false;
+  const isMember = roomMembership === true;
+
+  const isCheckingMembership =
+    activeRoom &&
+    (roomMembership === undefined ||
+      membershipLoading[activeRoom._id] === true);
 
   // Get membership
   useEffect(() => {
