@@ -42,7 +42,8 @@ const leaveRoom = async (req, res) => {
 const getRoomMembers = async (req, res) => {
   try {
     const members = await roomMemberService.getRoomMembers(
-      req.params.roomId
+      req.params.roomId,
+      userId = req.user._id,
     );
 
     return res.status(200).json({
@@ -58,8 +59,28 @@ const getRoomMembers = async (req, res) => {
   }
 };
 
+const getRoomMembership = async (req, res) => {
+  try {
+    const result = await roomMemberService.getRoomMembership(
+      req.params.roomId,
+      req.user._id,
+    );
+
+    return res.status(200).json({
+      success: true,
+      data: result,
+    });
+  } catch (err) {
+    return res.status(err.statusCode || 500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
 module.exports = {
   joinRoom,
   leaveRoom,
   getRoomMembers,
+  getRoomMembership
 };

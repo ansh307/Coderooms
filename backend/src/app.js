@@ -55,7 +55,7 @@ app.get("/metrics", async (req, res) => {
   res.end(await client.register.metrics());
 });
 
-app.use("/api/v1", limiter);
+// app.use("/api/v1", limiter);
 app.use("/api/v1/todo", authMiddleware, todoRoutes)
 app.use("/api/v1/room", authMiddleware, roomRoutes)
 app.use("/api/v1/roomMember", authMiddleware, roomMemberRoutes)

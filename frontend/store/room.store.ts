@@ -28,6 +28,17 @@ interface RoomStore {
   rooms: Room[];
   activeRoom: Room | null;
 
+  joinedRooms: Record<string, boolean>;
+  membershipLoading: Record<string, boolean>;
+
+  setRoomJoined: (roomId: string) => void;
+  setRoomLeft: (roomId: string) => void;
+
+  setMembership: (roomId: string, isMember: boolean) => void;
+
+  setMembershipLoading: (roomId: string, loading: boolean) => void;
+
+  isRoomJoined: (roomId: string) => boolean;
   loading: boolean;
   error: string | null;
 
@@ -44,9 +55,49 @@ interface RoomStore {
   reset: () => void;
 }
 
-export const useRoomStore = create<RoomStore>((set) => ({
+export const useRoomStore = create<RoomStore>((set, get) => ({
   rooms: [],
   activeRoom: null,
+
+  // Membership state
+  joinedRooms: {},
+  membershipLoading: {},
+
+  setRoomJoined: (roomId) =>
+    set((state) => ({
+      joinedRooms: {
+        ...state.joinedRooms,
+        [roomId]: true,
+      },
+    })),
+
+  setRoomLeft: (roomId) =>
+    set((state) => ({
+      joinedRooms: {
+        ...state.joinedRooms,
+        [roomId]: false,
+      },
+    })),
+
+  setMembership: (roomId, isMember) =>
+    set((state) => ({
+      joinedRooms: {
+        ...state.joinedRooms,
+        [roomId]: isMember,
+      },
+    })),
+
+  setMembershipLoading: (roomId, loading) =>
+    set((state) => ({
+      membershipLoading: {
+        ...state.membershipLoading,
+        [roomId]: loading,
+      },
+    })),
+
+  isRoomJoined: (roomId) => {
+    return get().joinedRooms[roomId] === true;
+  },
 
   loading: false,
   error: null,
@@ -57,9 +108,7 @@ export const useRoomStore = create<RoomStore>((set) => ({
 
       // Keep active room synchronized with refreshed data
       activeRoom: state.activeRoom
-        ? rooms.find(
-            (room) => room._id === state.activeRoom?._id
-          ) ?? null
+        ? (rooms.find((room) => room._id === state.activeRoom?._id) ?? null)
         : null,
     })),
 
@@ -76,24 +125,25 @@ export const useRoomStore = create<RoomStore>((set) => ({
 
   updateRoom: (room) =>
     set((state) => ({
-      rooms: state.rooms.map((item) =>
-        item._id === room._id ? room : item
-      ),
+      rooms: state.rooms.map((item) => (item._id === room._id ? room : item)),
 
-      activeRoom:
-        state.activeRoom?._id === room._id
-          ? room
-          : state.activeRoom,
+      activeRoom: state.activeRoom?._id === room._id ? room : state.activeRoom,
     })),
 
   removeRoom: (roomId) =>
     set((state) => {
-      const rooms = state.rooms.filter(
-        (room) => room._id !== roomId
-      );
+      const rooms = state.rooms.filter((room) => room._id !== roomId);
+
+      const joinedRooms = {
+        ...state.joinedRooms,
+      };
+
+      delete joinedRooms[roomId];
 
       return {
         rooms,
+        joinedRooms,
+
         activeRoom:
           state.activeRoom?._id === roomId
             ? (rooms[0] ?? null)
@@ -115,6 +165,8 @@ export const useRoomStore = create<RoomStore>((set) => ({
     set({
       rooms: [],
       activeRoom: null,
+      joinedRooms: {},
+      membershipLoading: {},
       loading: false,
       error: null,
     }),

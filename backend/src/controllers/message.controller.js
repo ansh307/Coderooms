@@ -5,7 +5,8 @@ const getMessages = async (req, res) => {
     const messages = await messageService.getMessages(
       req.params.roomId,
       req.query.page,
-      req.query.limit
+      req.query.limit,
+      userId = req.user._id,
     );
 
     return res.json({

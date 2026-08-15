@@ -92,7 +92,7 @@ const leaveRoom = async (roomId, userId, session = null) => {
 
   return true;
 };
-const getRoomMembers = async (roomId) => {
+const getRoomMembers = async (roomId, userId) => {
   if (!mongoose.Types.ObjectId.isValid(roomId)) {
     throw new ApiError(400, "Invalid room id.");
   }
@@ -101,6 +101,16 @@ const getRoomMembers = async (roomId) => {
 
   if (!room) {
     throw new ApiError(404, "Room not found.");
+  }
+
+  const isMember = await RoomMember.exists({
+    room: roomId,
+    user: userId,
+    status: "active",
+  });
+
+  if (!isMember) {
+    throw new ApiError(403, "You must join the room first.");
   }
 
   return RoomMember.find({
@@ -126,6 +136,29 @@ const getMembership = async (roomId, userId) => {
 const isMember = async (roomId, userId) => {
   const membership = await getMembership(roomId, userId);
   return !!membership;
+};
+
+const getRoomMembership = async (roomId, userId) => {
+  if (!mongoose.Types.ObjectId.isValid(roomId)) {
+    throw new ApiError(400, "Invalid room id.");
+  }
+
+  const room = await Room.findById(roomId);
+
+  if (!room) {
+    throw new ApiError(404, "Room not found.");
+  }
+
+  const membership = await RoomMember.findOne({
+    room: roomId,
+    user: userId,
+    status: "active",
+  });
+
+  return {
+    isMember: !!membership,
+    membership: membership || null,
+  };
 };
 
 const createOwner = async (roomId, userId, session = null) => {
@@ -165,4 +198,5 @@ module.exports = {
   getMembership,
   isMember,
   createOwner,
+  getRoomMembership
 };

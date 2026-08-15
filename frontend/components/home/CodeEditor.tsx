@@ -14,6 +14,19 @@ export default function CodeEditor() {
   const [code, setCode] = useState("");
 
   const activeRoom = useRoomStore((state) => state.activeRoom);
+  const setRoomJoined = useRoomStore((state) => state.setRoomJoined);
+  const joinedRooms = useRoomStore((state) => state.joinedRooms);
+  const membershipLoading = useRoomStore((state) => state.membershipLoading);
+  const setMembership = useRoomStore((state) => state.setMembership);
+  const setMembershipLoading = useRoomStore(
+    (state) => state.setMembershipLoading,
+  );
+
+  const isMember = activeRoom ? joinedRooms[activeRoom._id] === true : false;
+
+  const isCheckingMembership = activeRoom
+    ? membershipLoading[activeRoom._id] === true
+    : false;
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -54,6 +67,7 @@ export default function CodeEditor() {
 
       await api.post(`/roomMember/rooms/${activeRoom._id}/join`);
 
+      setRoomJoined(activeRoom._id);
       setJoinRequired(false);
 
       const token = useAuthStore.getState().accessToken;
@@ -76,9 +90,9 @@ export default function CodeEditor() {
       /*
        * Then ask the backend for the latest code.
        */
-      socket.emit("load-code", {
-        roomId: activeRoom._id,
-      });
+      // socket.emit("load-code", {
+      //   roomId: activeRoom._id,
+      // });
 
       toast.success("Room joined successfully");
     } catch (error: any) {
@@ -99,15 +113,42 @@ export default function CodeEditor() {
       setCode("");
       setLanguage("javascript");
       setJoinRequired(false);
+      setError(null);
+      setLoading(false);
+      return;
+    }
+
+    /*
+     * Immediately clear previous room state.
+     */
+    setCode("");
+    setLanguage(activeRoom.language || "javascript");
+    setError(null);
+
+    /*
+     * Don't show editor while membership is being checked.
+     */
+    if (isCheckingMembership) {
+      setLoading(true);
+      return;
+    }
+
+    /*
+     * User hasn't joined this room.
+     */
+    if (!isMember) {
+      setLoading(false);
+      setJoinRequired(true);
       return;
     }
 
     setJoinRequired(false);
-    setError(null);
+    setLoading(true);
 
     const token = useAuthStore.getState().accessToken;
 
     if (!token) {
+      setLoading(false);
       setError("Authentication token not found.");
       return;
     }
@@ -138,6 +179,7 @@ export default function CodeEditor() {
 
       setCode(data.content ?? "");
       setLanguage(data.language || activeRoom.language || "javascript");
+      setLoading(false);
     };
 
     const handleCodeUpdated = (data: {
@@ -167,11 +209,13 @@ export default function CodeEditor() {
         error.message === "You are not a member of this room."
       ) {
         toast.error("You are not a member of this room");
+        setLoading(false);
         setJoinRequired(true);
         setError(null);
         return;
       }
 
+      setLoading(false);
       setError(error.message || "Socket error occurred.");
     };
 
@@ -196,7 +240,7 @@ export default function CodeEditor() {
       socket.off("code-updated", handleCodeUpdated);
       socket.off("socket-error", handleSocketError);
     };
-  }, [activeRoom]);
+  }, [activeRoom, isMember, isCheckingMembership]);
 
   /*
    * No room selected

@@ -56,10 +56,10 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #303643;
+  background:  var(--color-surface-muted);
   border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #414958;
+  background:  var(--color-border-color);
 }

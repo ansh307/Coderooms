@@ -47,16 +47,58 @@ export default function MembersPanel({ open, onToggle }: MembersPanelProps) {
   const [activeTab, setActiveTab] = useState<"members" | "chats">("members");
 
   const activeRoom = useRoomStore((state) => state.activeRoom);
+  const joinedRooms = useRoomStore((state) => state.joinedRooms);
+  const membershipLoading = useRoomStore((state) => state.membershipLoading);
+  const setMembership = useRoomStore((state) => state.setMembership);
+  const setMembershipLoading = useRoomStore(
+    (state) => state.setMembershipLoading,
+  );
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [messageInput, setMessageInput] = useState("");
   const [messagesLoading, setMessagesLoading] = useState(false);
+  const [messagesError, setMessagesError] = useState<string | null>(null);
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const [members, setMembers] = useState<RoomMember[]>([]);
   const [membersLoading, setMembersLoading] = useState(false);
   const [membersError, setMembersError] = useState<string | null>(null);
+
+  const isMember = activeRoom ? joinedRooms[activeRoom._id] === true : false;
+
+  const isCheckingMembership = activeRoom
+    ? membershipLoading[activeRoom._id] === true
+    : false;
+
+  // Get membership
+  useEffect(() => {
+    if (!activeRoom) return;
+
+    const roomId = activeRoom._id;
+
+    const checkMembership = async () => {
+      try {
+        setMembershipLoading(roomId, true);
+
+        const response = await api.get(
+          `/roomMember/rooms/${roomId}/membership`,
+        );
+
+        const isMember = response.data?.data?.isMember === true;
+
+        setMembership(roomId, isMember);
+      } catch (error) {
+        console.error("Failed to check room membership:", error);
+
+        setMembership(roomId, false);
+      } finally {
+        setMembershipLoading(roomId, false);
+      }
+    };
+
+    checkMembership();
+  }, [activeRoom, setMembership, setMembershipLoading]);
 
   /*
    * Fetch members And Fetch Messages
@@ -65,6 +107,19 @@ export default function MembersPanel({ open, onToggle }: MembersPanelProps) {
   useEffect(() => {
     if (!activeRoom) {
       setMembers([]);
+      setMessages([]);
+      return;
+    }
+
+    const roomId = activeRoom._id;
+
+    if (isCheckingMembership) {
+      return;
+    }
+
+    if (!isMember) {
+      setMembersError("You are not a member of this room.");
+      setMessagesError("You are not a member of this room.");
       return;
     }
 
@@ -79,7 +134,11 @@ export default function MembersPanel({ open, onToggle }: MembersPanelProps) {
 
         setMembers(response.data.data ?? response.data ?? []);
       } catch (error: any) {
-        console.error("Failed to fetch room members:", error);
+        // console.error("Failed to fetch room members:", error);
+
+        toast.error(
+          error?.response?.data?.message || "Failed to load messages",
+        );
 
         setMembersError(
           error?.response?.data?.message || "Failed to load members.",
@@ -94,15 +153,20 @@ export default function MembersPanel({ open, onToggle }: MembersPanelProps) {
     const fetchMessages = async () => {
       try {
         setMessagesLoading(true);
+        setMessagesError(null);
 
         const response = await api.get(`/rooms/${activeRoom._id}/messages`);
 
         setMessages(response.data.data ?? response.data ?? []);
       } catch (error: any) {
-        console.error("Failed to load messages:", error);
+        // console.error("Failed to load messages:", error);
 
         toast.error(
           error?.response?.data?.message || "Failed to load messages",
+        );
+
+        setMessagesError(
+          error?.response?.data?.message || "Failed to load messages.",
         );
 
         setMessages([]);
@@ -113,7 +177,7 @@ export default function MembersPanel({ open, onToggle }: MembersPanelProps) {
 
     fetchMessages();
     fetchMembers();
-  }, [activeRoom]);
+  }, [activeRoom, isMember, isCheckingMembership]);
 
   /*
    * ReceiveMessage and
@@ -471,6 +535,10 @@ export default function MembersPanel({ open, onToggle }: MembersPanelProps) {
                     Loading messages...
                   </p>
                 </div>
+              ) : messagesError ? (
+                <div className="flex h-full items-center justify-center px-5 text-center">
+                  <p className="text-[13px] text-red-400">{membersError}</p>
+                </div>
               ) : messages.length === 0 ? (
                 <div className="flex h-full flex-col items-center justify-center text-center">
                   <MessageCircle
@@ -522,7 +590,6 @@ export default function MembersPanel({ open, onToggle }: MembersPanelProps) {
                       </div>
                     </div>
                   ))}
-
                   <div ref={messagesEndRef} />
                 </div>
               )}
