@@ -1,6 +1,8 @@
 import api from "./axios";
-import refreshApi from "./refresh";
-import useAuthStore from "../store/auth.store";
+import useAuthStore from "@/store/auth.store";
+import { refreshSession } from "@/auth/refreshSession";
+
+let redirectingToLogin = false;
 
 api.interceptors.response.use(
   (response) => response,
@@ -8,37 +10,60 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
+    /*
+     * Only handle authentication failures.
+     */
     if (
-      error.response?.status === 401 &&
-      !originalRequest?._retry &&
-      !originalRequest?.skipAuthRefresh
+      error.response?.status !== 401 ||
+      !originalRequest ||
+      originalRequest._retry ||
+      originalRequest.skipAuthRefresh
     ) {
-      originalRequest._retry = true;
-
-      try {
-        const res = await refreshApi.post("/auth/refresh");
-
-        const newToken = res.data.accessToken;
-
-        useAuthStore
-          .getState()
-          .setAccessToken(newToken);
-
-        originalRequest.headers.Authorization =
-          `Bearer ${newToken}`;
-
-        return api(originalRequest);
-      } catch (refreshError) {
-        useAuthStore
-          .getState()
-          .clearAuth();
-
-        window.location.href = "/login";
-
-        return Promise.reject(refreshError);
-      }
+      return Promise.reject(error);
     }
 
-    return Promise.reject(error);
+    /*
+     * Mark this request so it cannot
+     * enter an infinite refresh loop.
+     */
+    originalRequest._retry = true;
+
+    try {
+      /*
+       * If another request is already refreshing,
+       * this request waits for that same Promise.
+       */
+      const newToken = await refreshSession();
+
+      /*
+       * Update Authorization header
+       * with the new access token.
+       */
+      originalRequest.headers.Authorization =
+        `Bearer ${newToken}`;
+
+      /*
+       * Retry the original request.
+       */
+      return api(originalRequest);
+    } catch (refreshError) {
+      /*
+       * Refresh token is invalid/expired.
+       * User is genuinely unauthenticated.
+       */
+      useAuthStore.getState().clearAuth();
+
+      /*
+       * Prevent multiple simultaneous
+       * redirects when many requests fail.
+       */
+      if (!redirectingToLogin) {
+        redirectingToLogin = true;
+
+        window.location.replace("/login");
+      }
+
+      return Promise.reject(refreshError);
+    }
   },
 );

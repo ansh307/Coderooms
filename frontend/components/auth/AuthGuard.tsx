@@ -4,15 +4,12 @@ import { ReactNode, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-import refreshApi from "@/api/refresh";
 import useAuthStore from "@/store/auth.store";
+import { refreshSession } from "@/auth/refreshSession";
+import LoadingSpinner from "../ui/LoadingSpinner";
 
 interface AuthGuardProps {
   children: ReactNode;
-}
-
-interface RefreshResponse {
-  accessToken: string;
 }
 
 type AuthStatus = "checking" | "authenticated" | "unauthenticated";
@@ -28,7 +25,9 @@ export default function AuthGuard({ children }: AuthGuardProps) {
     const restoreSession = async () => {
       const token = useAuthStore.getState().accessToken;
 
-      // Access token exists
+      /*
+       * Access token already exists
+       */
       if (token) {
         if (mounted) {
           setStatus("authenticated");
@@ -37,22 +36,19 @@ export default function AuthGuard({ children }: AuthGuardProps) {
         return;
       }
 
-      // No access token.
-      // Try refresh token.
+      /*
+       * No access token.
+       * Try to restore using refresh token.
+       */
       try {
-        const response =
-          await refreshApi.post<RefreshResponse>("/auth/refresh");
-
-        const newAccessToken = response.data.accessToken;
-
-        useAuthStore.getState().setAccessToken(newAccessToken);
+        await refreshSession();
 
         if (mounted) {
           setStatus("authenticated");
         }
       } catch (error) {
         console.error("Failed to restore authentication:", error);
-        toast.error("Failed to restore authentication");
+
         useAuthStore.getState().clearAuth();
 
         if (mounted) {
@@ -74,12 +70,15 @@ export default function AuthGuard({ children }: AuthGuardProps) {
     }
   }, [status, router]);
 
-  if (status === "checking") {
-    return <div>Loading...</div>;
-  }
-
-  if (status === "unauthenticated") {
-    return <div>Redirecting...</div>;
+  if (status === "checking" || status === "unauthenticated") {
+    return (
+      <div className="flex h-full items-center justify-center">
+        <LoadingSpinner
+          size="lg"
+          message={status === "unauthenticated" ? "Redirecting" : "Loading"}
+        />
+      </div>
+    );
   }
 
   return <>{children}</>;

@@ -40,7 +40,7 @@ body {
 }
 
 body {
-  background: #0b0e13;
+  background: var(--color-primary-foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
 

@@ -71,6 +71,31 @@ const userSchema = new mongoose.Schema(
     refreshToken: {
       type: String,
       default: null,
+      select: false,
+    },
+
+    previousRefreshToken: {
+      type: String,
+      default: null,
+      select: false,
+    },
+    
+    previousRefreshTokenValue: {
+      type: String,
+      default: null,
+      select: false,
+    },
+
+    previousRefreshTokenExpiresAt: {
+      type: Date,
+      default: null,
+      select: false,
+    },
+
+    refreshTokenFamily: {
+      type: String,
+      default: null,
+      select: false,
     },
 
     // Account Status
