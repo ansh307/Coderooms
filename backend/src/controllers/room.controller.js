@@ -19,12 +19,15 @@ const createRoom = async (req, res) => {
 
 const getRooms = async (req, res) => {
   try {
-    const rooms = await roomService.getRooms(req.query);
+    const { publicRooms, myRooms, joinedRooms , rooms} = await roomService.getRooms({
+      userId: req.user._id,
+      type: req.query.type,
+      language: req.query.language,
+    });
 
     return res.status(200).json({
       success: true,
-      count: rooms.length,
-      data: rooms,
+      data: { publicRooms, myRooms, joinedRooms, rooms },
     });
   } catch (err) {
     return res.status(err.statusCode || 500).json({

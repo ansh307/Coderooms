@@ -19,6 +19,9 @@ interface SidebarProps {
 
 export default function Sidebar({ open, onToggle }: SidebarProps) {
   const [createRoomOpen, setCreateRoomOpen] = useState(false);
+  const [joinedRooms, setJoinedRooms] = useState([]);
+  const [myRooms, setMyRooms] = useState([]);
+  const [publicRooms, setPublicRooms] = useState([]);
 
   const {
     rooms,
@@ -42,9 +45,13 @@ export default function Sidebar({ open, onToggle }: SidebarProps) {
 
         const response = await api.get("/room/get-all-rooms");
 
-        const fetchedRooms = response.data.data ?? response.data;
+        const data = response.data.data ?? response.data;
 
-        setRooms(fetchedRooms);
+        setJoinedRooms(data.joinedRooms ?? []);
+        setMyRooms(data.myRooms ?? []);
+        setPublicRooms(data.publicRooms ?? []);
+        setRooms(data.rooms ?? []);
+        // console.log(data);
       } catch (error) {
         console.error("Failed to fetch rooms:", error);
 
@@ -91,7 +98,10 @@ export default function Sidebar({ open, onToggle }: SidebarProps) {
 
         {/* Rooms */}
         <SidebarRooms
-          rooms={rooms}
+          publicRooms={publicRooms}
+          myRooms={myRooms}
+          joinedRooms={joinedRooms}
+          // rooms={rooms}
           activeRoom={activeRoom}
           loading={loading}
           error={error}

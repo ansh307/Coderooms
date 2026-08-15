@@ -55,6 +55,7 @@ const createRoom = async (data, user) => {
           language,
           maxUsers,
           owner: user._id,
+          members: [user._id],
         },
       ],
       { session },
@@ -75,18 +76,60 @@ const createRoom = async (data, user) => {
   }
 };
 
-const getRooms = async ({ type, language }) => {
+const getRooms = async ({ userId, type, language }) => {
   const filter = {
     isArchived: false,
   };
 
   if (type) filter.type = type;
-
   if (language) filter.language = language;
 
-  return Room.find(filter).populate("owner", "username email avatar").sort({
+  const rooms = await Room.find(filter).populate("owner", "name email").sort({
     lastActivityAt: -1,
   });
+
+  const publicRooms = [];
+  const myRooms = [];
+  const joinedRooms = [];
+
+  for (const room of rooms) {
+    const isOwner = room.owner?._id?.toString() === userId.toString();
+
+    const isMember = room.members?.some(
+      (memberId) => memberId.toString() === userId.toString(),
+    );
+
+    /*
+     * System-created public rooms
+     */
+    if (room.type === "public" && !isOwner && !isMember) {
+      publicRooms.push(room);
+      continue;
+    }
+
+    /*
+     * Rooms created by current user
+     */
+    if (isOwner) {
+      myRooms.push(room);
+      continue;
+    }
+
+    /*
+     * Rooms created by someone else
+     * that current user joined
+     */
+    if (isMember) {
+      joinedRooms.push(room);
+    }
+  }
+
+  return {
+    publicRooms,
+    myRooms,
+    joinedRooms,
+    rooms
+  };
 };
 
 const getRoomById = async (roomId) => {

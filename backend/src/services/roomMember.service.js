@@ -53,6 +53,9 @@ const joinRoom = async (roomId, userId, session = null) => {
       $inc: {
         activeUsers: 1,
       },
+      $push: {
+        members: userId,
+      },
       lastActivityAt: new Date(),
     },
     {
@@ -82,6 +85,9 @@ const leaveRoom = async (roomId, userId, session = null) => {
     {
       $inc: {
         activeUsers: -1,
+      },
+      $pull: {
+        members: userId,
       },
       lastActivityAt: new Date(),
     },

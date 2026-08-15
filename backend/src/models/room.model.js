@@ -16,6 +16,13 @@ const roomSchema = new Schema(
       maxlength: 500,
     },
 
+    members: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+
     owner: {
       type: Schema.Types.ObjectId,
       ref: "User",
@@ -62,7 +69,7 @@ const roomSchema = new Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 module.exports = mongoose.model("Room", roomSchema);
