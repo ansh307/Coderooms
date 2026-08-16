@@ -1,28 +1,5 @@
+import type { Room } from "@/types/rooms";
 import { create } from "zustand";
-
-export interface Room {
-  _id: string;
-  name: string;
-  description: string;
-  owner: string;
-  type: "public" | "private";
-  inviteCode?: string;
-  language: string;
-  isArchived: boolean;
-  maxUsers: number;
-  activeUsers: number;
-  lastActivityAt: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-interface CreateRoomData {
-  name: string;
-  description?: string;
-  type: "public" | "private";
-  language: string;
-  maxUsers: number;
-}
 
 interface RoomStore {
   rooms: Room[];

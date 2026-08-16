@@ -4,12 +4,14 @@ interface LoadingSpinnerProps {
   size?: "sm" | "md" | "lg";
   className?: string;
   message?: string;
+  showMessage?: boolean;
 }
 
 export default function LoadingSpinner({
   size = "md",
   className = "",
   message = "Loading",
+  showMessage = true,
 }: LoadingSpinnerProps) {
   const sizes = {
     sm: "h-4 w-4",
@@ -30,7 +32,7 @@ export default function LoadingSpinner({
         role="status"
         aria-label="Loading"
       />
-      <span className="">{message}...</span>
+      {showMessage && <span className="">{message}...</span>}
     </div>
   );
 }

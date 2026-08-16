@@ -159,7 +159,6 @@ const updateRoom = async (roomId, data, user) => {
     "language",
     "type",
     "maxUsers",
-    "isArchived",
   ];
 
   const update = {};
