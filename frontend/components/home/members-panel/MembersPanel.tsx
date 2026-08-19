@@ -30,7 +30,21 @@ export default function MembersPanel({ open, onToggle }: MembersPanelProps) {
    * Members
    */
 
-  const { members, membersLoading, membersError } = useRoomMembers({
+  const {
+    members,
+    membersLoading,
+    membersError,
+
+    joinRequests,
+    joinRequestsLoading,
+    joinRequestsError,
+    processingRequest,
+
+    isOwner,
+    isPrivate,
+    approveJoinRequest,
+    rejectJoinRequest,
+  } = useRoomMembers({
     isMember,
     isCheckingMembership,
   });
@@ -117,6 +131,14 @@ export default function MembersPanel({ open, onToggle }: MembersPanelProps) {
             members={members}
             membersLoading={membersLoading}
             membersError={membersError}
+            joinRequests={joinRequests}
+            joinRequestsLoading={joinRequestsLoading}
+            joinRequestsError={joinRequestsError}
+            processingRequest={processingRequest}
+            isOwner={isOwner}
+            isPrivate={isPrivate}
+            approveJoinRequest={approveJoinRequest}
+            rejectJoinRequest={rejectJoinRequest}
           />
         ) : (
           <ChatTab

@@ -2,6 +2,11 @@ import refreshApi from "@/api/refresh";
 import useAuthStore from "@/store/auth.store";
 
 interface RefreshResponse {
+  user: {
+    _id: string;
+    name: string;
+    email: string;
+  };
   accessToken: string;
 }
 
@@ -25,14 +30,15 @@ export async function refreshSession(): Promise<string> {
       );
 
       const newAccessToken = response.data.accessToken;
-
+      const user = response.data.user;
+      
       if (!newAccessToken) {
         throw new Error("No access token returned");
       }
 
       useAuthStore
         .getState()
-        .setAccessToken(newAccessToken);
+        .setAuth({user, accessToken : newAccessToken});
 
       return newAccessToken;
     } finally {

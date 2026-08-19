@@ -8,6 +8,7 @@ import {
   Trash2,
   MoreHorizontal,
   Pencil,
+  Link2,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -36,6 +37,8 @@ interface SidebarRoomsProps {
   onSetActiveRoom: (room: Room) => void;
   onDeleteRoom: (room: Room) => void;
   onEditRoom: (room: Room) => void;
+  onJoinRoom: (room: Room) => void;
+  onInviteRoom: (room: Room) => void;
 }
 
 interface RoomSectionProps {
@@ -44,10 +47,13 @@ interface RoomSectionProps {
   activeRoom: Room | null;
   open: boolean;
   allowActions?: boolean;
+  allowJoin?: boolean;
   onToggle: () => void;
   onSetActiveRoom: (room: Room) => void;
   onEditRoom?: (room: Room) => void;
   onDeleteRoom?: (room: Room) => void;
+  onJoinRoom?: (room: Room) => void;
+  onInviteRoom?: (room: Room) => void;
 }
 
 function RoomSection({
@@ -56,10 +62,13 @@ function RoomSection({
   activeRoom,
   open,
   allowActions = false,
+  allowJoin = false,
   onToggle,
   onSetActiveRoom,
   onDeleteRoom,
   onEditRoom,
+  onJoinRoom,
+  onInviteRoom,
 }: RoomSectionProps) {
   const [menuOpen, setMenuOpen] = useState<string | null>(null);
 
@@ -231,6 +240,38 @@ function RoomSection({
                         "
                             onClick={(event) => event.stopPropagation()}
                           >
+                            {room.type === "private" && (
+                              <>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setMenuOpen(null);
+                                    onInviteRoom?.(room);
+                                  }}
+                                  className="
+                                      flex
+                                      w-full
+                                      items-center
+                                      gap-2
+                                      rounded-[7px]
+                                      px-3
+                                      py-2
+                                      text-left
+                                      text-sm
+                                      text-[#d8dce5]
+                                      transition-colors
+                                      hover:bg-surface-muted
+                                      hover:text-white
+                                  "
+                                >
+                                  <Link2 size={14} strokeWidth={1.8} />
+                                  <span>Invite Others</span>
+                                </button>
+
+                                <div className="my-1 h-px bg-border-color" />
+                              </>
+                            )}
+
                             <button
                               type="button"
                               onClick={() => {
@@ -287,6 +328,32 @@ function RoomSection({
                         )}
                       </div>
                     )}
+
+                    {allowJoin && (
+                      <button
+                        type="button"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          onJoinRoom?.(room);
+                        }}
+                        className="
+                            shrink-0
+                            rounded-[7px]
+                            border border-border-color
+                            px-2.5
+                            py-1.5
+                            text-[11px]
+                            font-medium
+                            text-[#aeb4c0]
+                            transition-colors
+                            hover:border-green-accent-muted
+                            hover:bg-surface
+                            hover:text-green-accent
+                          "
+                      >
+                        Join
+                      </button>
+                    )}
                   </div>
                 );
               })}
@@ -308,6 +375,8 @@ export default function SidebarRooms({
   onSetActiveRoom,
   onDeleteRoom,
   onEditRoom,
+  onJoinRoom,
+  onInviteRoom,
 }: SidebarRoomsProps) {
   const [publicOpen, setPublicOpen] = useState(false);
   const [myRoomsOpen, setMyRoomsOpen] = useState(false);
@@ -339,6 +408,8 @@ export default function SidebarRooms({
             open={publicOpen}
             onToggle={() => setPublicOpen((prev) => !prev)}
             onSetActiveRoom={onSetActiveRoom}
+            onJoinRoom={onJoinRoom}
+            allowJoin={true}
           />
 
           <RoomSection
@@ -351,6 +422,7 @@ export default function SidebarRooms({
             onDeleteRoom={onDeleteRoom}
             onEditRoom={onEditRoom}
             allowActions={true}
+            onInviteRoom={onInviteRoom}
           />
 
           <RoomSection

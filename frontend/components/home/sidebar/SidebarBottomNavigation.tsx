@@ -4,6 +4,7 @@ import { Settings, UsersRound } from "lucide-react";
 
 interface SidebarBottomNavigationProps {
   onCreateRoom: () => void;
+  onJoinRoom: () => void;
 }
 
 export default function SidebarBottomNavigation({

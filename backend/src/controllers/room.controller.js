@@ -19,11 +19,12 @@ const createRoom = async (req, res) => {
 
 const getRooms = async (req, res) => {
   try {
-    const { publicRooms, myRooms, joinedRooms , rooms} = await roomService.getRooms({
-      userId: req.user._id,
-      type: req.query.type,
-      language: req.query.language,
-    });
+    const { publicRooms, myRooms, joinedRooms, rooms } =
+      await roomService.getRooms({
+        userId: req.user._id,
+        type: req.query.type,
+        language: req.query.language,
+      });
 
     return res.status(200).json({
       success: true,
@@ -90,10 +91,27 @@ const deleteRoom = async (req, res) => {
   }
 };
 
+const getRoomByInviteCode = async (req, res) => {
+  try {
+    const room = await roomService.getRoomByInviteCode(req.params.inviteCode);
+
+    return res.status(200).json({
+      success: true,
+      data: room,
+    });
+  } catch (err) {
+    return res.status(err.statusCode || 500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
 module.exports = {
   createRoom,
   getRooms,
   getRoomById,
   updateRoom,
   deleteRoom,
+  getRoomByInviteCode,
 };

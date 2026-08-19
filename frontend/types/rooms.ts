@@ -2,7 +2,7 @@ export interface Room {
   _id: string;
   name: string;
   description: string;
-  owner: string;
+  owner: Owner;
   type: "public" | "private";
   inviteCode?: string;
   language: string;
@@ -12,4 +12,10 @@ export interface Room {
   lastActivityAt: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface Owner {
+  _id: string;
+  name: string;
+  email: string;
 }

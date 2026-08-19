@@ -23,6 +23,21 @@ const roomSchema = new Schema(
       },
     ],
 
+    joinRequests: [
+      {
+        user: {
+          type: Schema.Types.ObjectId,
+          ref: "User",
+          required: true,
+        },
+
+        requestedAt: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
+
     owner: {
       type: Schema.Types.ObjectId,
       ref: "User",

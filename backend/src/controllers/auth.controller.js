@@ -128,7 +128,7 @@ const refreshToken = async (req, res) => {
   try {
     const token = req.cookies.refreshToken;
 
-    const { accessToken, refreshToken } =
+    const { accessToken, refreshToken, user } =
       await authService.refreshToken(token);
 
     res.cookie("refreshToken", refreshToken, {
@@ -143,6 +143,7 @@ const refreshToken = async (req, res) => {
     return res.status(200).json({
       success: true,
       accessToken,
+      user
     });
   } catch (error) {
     return res.status(401).json({

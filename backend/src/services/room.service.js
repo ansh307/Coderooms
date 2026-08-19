@@ -5,6 +5,7 @@ const codeService = require("./code.service");
 const Message = require("../models/message.model");
 const Code = require("../models/code.model");
 const RoomMember = require("../models/roomMember.model");
+const { generateInviteCode } = require("../utils/InviteCode");
 
 class ApiError extends Error {
   constructor(statusCode, message) {
@@ -46,6 +47,11 @@ const createRoom = async (data, user) => {
       throw new ApiError(400, "Maximum users must be between 2 and 100.");
     }
 
+     const inviteCode =
+      type === "private"
+        ? generateInviteCode()
+        : undefined;
+
     const [room] = await Room.create(
       [
         {
@@ -56,6 +62,7 @@ const createRoom = async (data, user) => {
           maxUsers,
           owner: user._id,
           members: [user._id],
+           inviteCode,
         },
       ],
       { session },
@@ -67,7 +74,7 @@ const createRoom = async (data, user) => {
 
     await session.commitTransaction();
 
-    return await Room.findById(room._id).populate("owner", "username email");
+    return await Room.findById(room._id).populate("owner", "name email");
   } catch (err) {
     await session.abortTransaction();
     throw err;
@@ -95,17 +102,10 @@ const getRooms = async ({ userId, type, language }) => {
   for (const room of rooms) {
     const isOwner = room.owner?._id?.toString() === userId.toString();
 
-    const isMember = room.members?.some(
-      (memberId) => memberId.toString() === userId.toString(),
-    );
-
-    /*
-     * System-created public rooms
-     */
-    if (room.type === "public" && !isOwner && !isMember) {
-      publicRooms.push(room);
-      continue;
-    }
+    const isMember =
+      room.members?.some(
+        (memberId) => memberId.toString() === userId.toString(),
+      ) ?? false;
 
     /*
      * Rooms created by current user
@@ -121,6 +121,12 @@ const getRooms = async ({ userId, type, language }) => {
      */
     if (isMember) {
       joinedRooms.push(room);
+      continue;
+    }
+
+    // Public rooms that I haven't joined
+    if (room.type === "public") {
+      publicRooms.push(room);
     }
   }
 
@@ -128,7 +134,7 @@ const getRooms = async ({ userId, type, language }) => {
     publicRooms,
     myRooms,
     joinedRooms,
-    rooms
+    rooms,
   };
 };
 
@@ -153,13 +159,7 @@ const updateRoom = async (roomId, data, user) => {
     throw new ApiError(400, "Invalid room id.");
   }
 
-  const allowedFields = [
-    "name",
-    "description",
-    "language",
-    "type",
-    "maxUsers",
-  ];
+  const allowedFields = ["name", "description", "language", "type", "maxUsers"];
 
   const update = {};
 
@@ -295,10 +295,28 @@ const deleteRoom = async (roomId, user) => {
   }
 };
 
+const getRoomByInviteCode = async (inviteCode) => {
+  if (!inviteCode) {
+    throw new ApiError(400, "Invite code is required.");
+  }
+
+  const room = await Room.findOne({
+    inviteCode: inviteCode.trim(),
+    isArchived: false,
+  }).populate("owner", "name email");
+
+  if (!room) {
+    throw new ApiError(404, "Invalid or expired invite code.");
+  }
+
+  return room;
+};
+
 module.exports = {
   createRoom,
   getRooms,
   getRoomById,
   updateRoom,
   deleteRoom,
+  getRoomByInviteCode,
 };

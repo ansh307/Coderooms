@@ -24,3 +24,16 @@ export interface ChatMessage {
   };
   createdAt: string;
 }
+
+export interface JoinRequest {
+  _id: string;
+  room: string;
+  user: {
+    _id: string;
+    name: string;
+    email: string;
+  };
+  role: "member";
+  status: "pending";
+  createdAt: string;
+}

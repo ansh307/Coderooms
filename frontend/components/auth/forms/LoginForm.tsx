@@ -24,6 +24,7 @@ export default function LoginForm() {
 
       const result = await authService.login(data);
 
+      console.log("result from LoginFrom", result);
       setAuth({ user: result.user, accessToken: result.accessToken });
       toast.success(result?.message || "Login successful. Redirecting....");
 

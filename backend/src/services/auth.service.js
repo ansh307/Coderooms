@@ -336,6 +336,7 @@ const refreshToken = async (incomingRefreshToken) => {
   });
 
   return {
+    user,
     accessToken,
     refreshToken: newRefreshToken,
   };

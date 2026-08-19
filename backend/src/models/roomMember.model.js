@@ -24,7 +24,7 @@ const roomMemberSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: ["active", "left", "banned"],
+      enum: ["active", "left", "banned", "pending"],
       default: "active",
     },
 
