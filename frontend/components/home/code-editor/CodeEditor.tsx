@@ -41,11 +41,52 @@ export default function CodeEditor() {
     handleRunCode,
   } = useCodeEditor();
 
+  /*
+   * Auto open Output when running code
+   */
   useEffect(() => {
     if (running) {
       setOutputOpen(true);
     }
   }, [running]);
+
+  /*
+   * Handle keyboard shortcuts
+   * Ctrl/Cmd + Enter -> Run Code
+   * Ctrl/Cmd + J     -> Toggle Output
+   */
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const isRunShortcut =
+        (event.ctrlKey || event.metaKey) && event.key === "Enter";
+
+      const isOutputShortcut =
+        (event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "j";
+
+      if (isRunShortcut) {
+        // Don't run if the editor is disabled/not joined
+        if (joinRequired || running) return;
+
+        event.preventDefault();
+        handleRunCode();
+        return;
+      }
+
+      if (isOutputShortcut) {
+        if (!activeRoom) return;
+
+        event.preventDefault();
+        setOutputOpen((prev) => !prev);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [handleRunCode, joinRequired, running]);
 
   /*
    * No room selected
