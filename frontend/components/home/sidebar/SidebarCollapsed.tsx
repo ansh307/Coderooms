@@ -89,7 +89,7 @@ export default function SidebarCollapsed({
             rounded-full
             border-2
             border-[#10141b]
-            bg-[#65c97b]
+            bg-green-accent
           "
         />
       </button>

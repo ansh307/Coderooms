@@ -1,4 +1,4 @@
-import { Code2, Expand, Sun, Play } from "lucide-react";
+import { Code2, Expand, Sun, Play, Pause } from "lucide-react";
 
 interface CodeEditorHeaderProps {
   roomName?: string;
@@ -63,22 +63,20 @@ export default function CodeEditorHeader({
               flex
               h-8
               items-center
-              gap-2
-              rounded-[8px]
-              bg-green-accent
+              gap-2           
               px-3
               text-[12px]
+              text-[#d9dde5] 
+              transition-colors
+              hover:text-white
               font-medium
-              text-white
-              transition-opacity
               hover:opacity-90
               disabled:pointer-events-none
               disabled:opacity-50
             "
+            title={running ? "Running..." : "Run"}
           >
-            <Play size={13} fill="currentColor" />
-
-            {running ? "Running..." : "Run"}
+            {running ? <Pause size={23} /> : <Play size={23} />}
           </button>
         )}
 

@@ -1,3 +1,5 @@
+import { ArrowUp } from "lucide-react";
+
 interface CodeEditorStatusBarProps {
   line: number;
   column: number;
@@ -46,7 +48,7 @@ export default function CodeEditorStatusBar({
               outputOpen ? "rotate-180" : ""
             }`}
           >
-            ▲
+            <ArrowUp className="w-4 h-4" />
           </span>
         </button>
 
@@ -59,7 +61,7 @@ export default function CodeEditorStatusBar({
             {language}
           </span>
 
-          <span className="h-3 w-3 rounded-full bg-[#65c97b]" />
+          <span className="h-3 w-3 rounded-full bg-green-accent" />
         </div>
       </div>
     </footer>

@@ -210,6 +210,12 @@ export default function Sidebar({ open, onToggle }: SidebarProps) {
           open={createRoomOpen}
           onClose={() => setCreateRoomOpen(false)}
         />
+
+        <InviteRoomModal
+          open={inviteRoom !== null}
+          room={inviteRoom}
+          onClose={() => setInviteRoom(null)}
+        />
       </>
     );
   }

@@ -8,8 +8,15 @@ import useCodeEditor from "@/hooks/room/useCodeEditor";
 import CodeEditorOutput from "./CodeEditorOutput";
 import { useEffect, useState } from "react";
 
+type OutputPosition = "bottom" | "right";
+type OutputSizes = 200 | 300 | 400 | 500 | 600;
+
 export default function CodeEditor() {
   const [outputOpen, setOutputOpen] = useState(false);
+  const [outputPosition, setOutputPosition] =
+    useState<OutputPosition>("bottom");
+
+  const [outputSize, setOutputSize] = useState<OutputSizes>(400);
 
   const {
     activeRoom,
@@ -71,36 +78,52 @@ export default function CodeEditor() {
         onRun={handleRunCode}
       />
 
-      {/* Editor */}
-      <div className="min-h-0 min-w-0 flex-1">
-        {joinRequired ? (
-          <CodeEditorJoin joining={joining} onJoin={handleJoinRoom} />
-        ) : loading ? (
-          <div className="flex h-full items-center justify-center">
-            <p className="text-[13px] text-[#858c9b]">Loading code...</p>
-          </div>
-        ) : error ? (
-          <div className="flex h-full items-center justify-center">
-            <p className="text-[13px] text-red-400">{error}</p>
-          </div>
-        ) : (
-          <CodeEditorMonaco
-            code={code}
-            language={activeRoom.language}
-            onMount={handleEditorMount}
-            onChange={handleCodeChange}
+      <div
+        className={`min-h-0 min-w-0 flex-1 ${
+          outputOpen && outputPosition === "right"
+            ? "flex flex-row"
+            : "flex flex-col"
+        }`}
+      >
+        {/* Monaco */}
+        <div className="min-h-0 min-w-0 flex-1">
+          {joinRequired ? (
+            <CodeEditorJoin joining={joining} onJoin={handleJoinRoom} />
+          ) : loading ? (
+            <div className="flex h-full items-center justify-center">
+              <p className="text-[13px] text-[#858c9b]">Loading code...</p>
+            </div>
+          ) : error ? (
+            <div className="flex h-full items-center justify-center">
+              <p className="text-[13px] text-red-400">{error}</p>
+            </div>
+          ) : (
+            <CodeEditorMonaco
+              code={code}
+              language={activeRoom.language}
+              onMount={handleEditorMount}
+              onChange={handleCodeChange}
+            />
+          )}
+        </div>
+
+        {/* Output */}
+        {outputOpen && (
+          <CodeEditorOutput
+            result={executionResult}
+            error={executionError}
+            running={running}
+            position={outputPosition}
+            outputSize={outputSize}
+            setOutputSize={setOutputSize}
+            onTogglePosition={() =>
+              setOutputPosition((prev) =>
+                prev === "bottom" ? "right" : "bottom",
+              )
+            }
           />
         )}
       </div>
-
-      {/*  CodeRunner Output*/}
-      {outputOpen && (
-        <CodeEditorOutput
-          result={executionResult}
-          error={executionError}
-          running={running}
-        />
-      )}
 
       {/* Status bar */}
 

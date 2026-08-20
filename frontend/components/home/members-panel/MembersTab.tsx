@@ -179,7 +179,7 @@ export default function MembersTab({
                 </div>
 
                 {/* Online indicator */}
-                <span className="h-2 w-2 shrink-0 rounded-full bg-[#65c97b]" />
+                <span className="h-2 w-2 shrink-0 rounded-full bg-green-accent" />
               </div>
             ))}
           </div>
