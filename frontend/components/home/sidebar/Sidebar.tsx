@@ -44,10 +44,7 @@ export default function Sidebar({ open, onToggle }: SidebarProps) {
   const [editRoom, setEditRoom] = useState<Room | null>(null);
   const [updatingRoom, setUpdatingRoom] = useState(false);
 
-  const [joinRoomOpen, setJoinRoomOpen] = useState(false);
-  const [joiningRoom, setJoiningRoom] = useState(false);
-
-  const [inviteRoom, setInviteRoom] = useState<Room | null>(null);
+  // const [joinRoomOpen, setJoinRoomOpen] = useState(false);
 
   const {
     rooms,
@@ -58,6 +55,10 @@ export default function Sidebar({ open, onToggle }: SidebarProps) {
     setLoading,
     error,
     setError,
+    joinRoomOpen,
+    setJoinRoomOpen,
+    inviteRoom,
+    setInviteRoom,
   } = useRoomStore();
 
   /*
@@ -161,38 +162,6 @@ export default function Sidebar({ open, onToggle }: SidebarProps) {
     }
   };
 
-  const handleJoinRoom = async (inviteCode: string) => {
-    try {
-      setJoiningRoom(true);
-
-      /*
-       * 1. Resolve invite code → room
-       */
-      const roomResponse = await api.get(
-        `/room/get-room-by-invite/${inviteCode}`,
-      );
-
-      const room = roomResponse.data.data;
-
-      /*
-       * 2. Private room → request membership
-       */
-      const response = await api.post(
-        `/roomMember/rooms/${room._id}/join-request`,
-      );
-
-      toast.success("Join request sent. Waiting for owner approval.");
-
-      setJoinRoomOpen(false);
-    } catch (error: any) {
-      console.error("Failed to join room:", error);
-
-      toast.error(error?.response?.data?.message || "Failed to join room");
-    } finally {
-      setJoiningRoom(false);
-    }
-  };
-
   const handleJoinPublicRoom = async (room: Room) => {
     try {
       await api.post(`/roomMember/rooms/${room._id}/join`);
@@ -237,6 +206,7 @@ export default function Sidebar({ open, onToggle }: SidebarProps) {
         />
 
         <CreateRoomModal
+          setMyRooms={setMyRooms}
           open={createRoomOpen}
           onClose={() => setCreateRoomOpen(false)}
         />
@@ -280,6 +250,7 @@ export default function Sidebar({ open, onToggle }: SidebarProps) {
       <CreateRoomModal
         open={createRoomOpen}
         onClose={() => setCreateRoomOpen(false)}
+        setMyRooms={setMyRooms}
       />
       <DeleteRoomModal
         open={deleteRoom !== null}
@@ -307,13 +278,8 @@ export default function Sidebar({ open, onToggle }: SidebarProps) {
 
       <JoinRoomModal
         open={joinRoomOpen}
-        loading={joiningRoom}
-        onClose={() => {
-          if (!joiningRoom) {
-            setJoinRoomOpen(false);
-          }
-        }}
-        onSubmit={handleJoinRoom}
+        setJoinRoomOpen={setJoinRoomOpen}
+        onClose={() => setJoinRoomOpen(false)}
       />
 
       <InviteRoomModal

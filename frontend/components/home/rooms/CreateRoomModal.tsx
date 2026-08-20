@@ -1,19 +1,22 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { Dispatch, FormEvent, SetStateAction, useState } from "react";
 import { Code2, X } from "lucide-react";
 
 import { api } from "@/api";
 import { useRoomStore } from "@/store/room.store";
+import { Room } from "@/types/rooms";
 
 interface CreateRoomModalProps {
   open: boolean;
   onClose: () => void;
+  setMyRooms: Dispatch<SetStateAction<Room[]>>;
 }
 
 export default function CreateRoomModal({
   open,
   onClose,
+  setMyRooms,
 }: CreateRoomModalProps) {
   const addRoom = useRoomStore((state) => state.addRoom);
 
@@ -84,6 +87,7 @@ export default function CreateRoomModal({
        * the currently active room.
        */
       addRoom(newRoom);
+      setMyRooms((rooms) => [newRoom, ...rooms]);
 
       resetForm();
       onClose();

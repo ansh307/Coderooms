@@ -1,9 +1,10 @@
 "use client";
 
-import { Check, UserPlus, UsersRound, X } from "lucide-react";
+import { Check, UserPlus, Users, UsersRound, X } from "lucide-react";
 
 import type { JoinRequest, RoomMember } from "./types";
 import { useState } from "react";
+import { useRoomStore } from "@/store/room.store";
 
 interface MembersTabProps {
   members: RoomMember[];
@@ -42,6 +43,7 @@ export default function MembersTab({
   rejectJoinRequest,
 }: MembersTabProps) {
   const [showJoinRequests, setShowJoinRequests] = useState(false);
+  const { activeRoom, setInviteRoom } = useRoomStore();
   return (
     <div className="flex min-h-0 flex-1 w-full flex-col">
       {/* Members header */}
@@ -79,7 +81,7 @@ export default function MembersTab({
         "
               title="Join requests"
             >
-              <UserPlus size={15} />
+              <Users size={15} />
 
               <span>Requests</span>
 
@@ -104,6 +106,7 @@ export default function MembersTab({
 
           {/* Invite */}
           <button
+            onClick={() => setInviteRoom(activeRoom)}
             type="button"
             className="
         flex h-9 w-9

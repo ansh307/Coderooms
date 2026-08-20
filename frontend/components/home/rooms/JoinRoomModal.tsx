@@ -2,24 +2,59 @@
 
 import { FormEvent, useState } from "react";
 import { Link2, X } from "lucide-react";
+import { api } from "@/api";
+import { toast } from "sonner";
 
 interface JoinRoomModalProps {
   open: boolean;
-  loading?: boolean;
   onClose: () => void;
-  onSubmit: (inviteCode: string) => void;
+  setJoinRoomOpen: (open: boolean) => void;
 }
 
 export default function JoinRoomModal({
   open,
-  loading = false,
   onClose,
-  onSubmit,
+  setJoinRoomOpen,
 }: JoinRoomModalProps) {
+  const [joiningRoom, setJoiningRoom] = useState(false);
+
   const [inviteCode, setInviteCode] = useState("");
   const [error, setError] = useState("");
 
   if (!open) return null;
+
+  const handleJoinRoom = async (inviteCode: string) => {
+    try {
+      setJoiningRoom(true);
+
+      /*
+       * 1. Resolve invite code → room
+       */
+      const roomResponse = await api.get(
+        `/room/get-room-by-invite/${inviteCode}`,
+      );
+
+      const room = roomResponse.data.data;
+
+      /*
+       * 2. Private room → request membership
+       */
+      const response = await api.post(
+        `/roomMember/rooms/${room._id}/join-request`,
+      );
+
+      toast.success("Join request sent. Waiting for owner approval.");
+
+      setJoinRoomOpen(false);
+    } catch (error: any) {
+      // console.error("Failed to join room:", error);
+
+      toast.error(error?.response?.data?.message || "Failed to join room");
+    } finally {
+      setJoiningRoom(false);
+      setInviteCode("");
+    }
+  };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -33,11 +68,11 @@ export default function JoinRoomModal({
 
     setError("");
 
-    onSubmit(code);
+    handleJoinRoom(code);
   };
 
   const handleClose = () => {
-    if (loading) return;
+    if (joiningRoom) return;
 
     setInviteCode("");
     setError("");
@@ -96,7 +131,7 @@ export default function JoinRoomModal({
           <button
             type="button"
             onClick={handleClose}
-            disabled={loading}
+            disabled={joiningRoom}
             className="
               ml-auto
               flex h-9 w-9
@@ -129,7 +164,7 @@ export default function JoinRoomModal({
             onChange={(event) => setInviteCode(event.target.value)}
             placeholder="e.g. X7K9P2"
             autoFocus
-            disabled={loading}
+            disabled={joiningRoom}
             className="
               h-11 w-full
               rounded-[9px]
@@ -155,7 +190,7 @@ export default function JoinRoomModal({
             <button
               type="button"
               onClick={handleClose}
-              disabled={loading}
+              disabled={joiningRoom}
               className="
                 h-11 rounded-[9px]
                 border border-border-color
@@ -174,7 +209,7 @@ export default function JoinRoomModal({
 
             <button
               type="submit"
-              disabled={loading}
+              disabled={joiningRoom}
               className="
                 h-11 rounded-[9px]
                 bg-green-accent
@@ -187,7 +222,7 @@ export default function JoinRoomModal({
                 disabled:opacity-50
               "
             >
-              {loading ? "Joining..." : "Join Room"}
+              {joiningRoom ? "Joining..." : "Join Room"}
             </button>
           </div>
         </form>

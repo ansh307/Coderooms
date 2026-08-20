@@ -1,6 +1,7 @@
 "use client";
 
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
+import { Room } from "@/types/rooms";
 
 import {
   ChevronDown,
@@ -11,21 +12,6 @@ import {
   Link2,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-
-interface Room {
-  _id: string;
-  name: string;
-  language: string;
-  description: string;
-  owner: string;
-  type: "private" | "public";
-  isArchived: boolean;
-  maxUsers: number;
-  activeUsers: number;
-  lastActivityAt: string;
-  createdAt: string;
-  updatedAt: string;
-}
 
 interface SidebarRoomsProps {
   publicRooms: Room[];

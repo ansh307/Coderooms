@@ -4,6 +4,7 @@ import { create } from "zustand";
 interface RoomStore {
   rooms: Room[];
   activeRoom: Room | null;
+  inviteRoom: Room | null;
 
   joinedRooms: Record<string, boolean | null>;
   membershipLoading: Record<string, boolean>;
@@ -17,16 +18,19 @@ interface RoomStore {
 
   isRoomJoined: (roomId: string) => boolean;
   loading: boolean;
+  joinRoomOpen: boolean;
   error: string | null;
 
   setRooms: (rooms: Room[]) => void;
   setActiveRoom: (room: Room | null) => void;
+  setInviteRoom: (room: Room | null) => void;
 
   addRoom: (room: Room) => void;
   updateRoom: (room: Room) => void;
   removeRoom: (roomId: string) => void;
 
   setLoading: (loading: boolean) => void;
+  setJoinRoomOpen: (loading: boolean) => void;
   setError: (error: string | null) => void;
 
   reset: () => void;
@@ -35,6 +39,12 @@ interface RoomStore {
 export const useRoomStore = create<RoomStore>((set, get) => ({
   rooms: [],
   activeRoom: null,
+  inviteRoom: null,
+
+  setInviteRoom: (room) =>
+    set({
+      inviteRoom: room,
+    }),
 
   // Membership state
   joinedRooms: {},
@@ -77,6 +87,7 @@ export const useRoomStore = create<RoomStore>((set, get) => ({
   },
 
   loading: false,
+  joinRoomOpen: false,
   error: null,
 
   setRooms: (rooms) =>
@@ -132,6 +143,11 @@ export const useRoomStore = create<RoomStore>((set, get) => ({
     set({
       loading,
     }),
+
+  setJoinRoomOpen: () =>
+    set((state) => ({
+      joinRoomOpen: !state.joinRoomOpen,
+    })),
 
   setError: (error) =>
     set({
