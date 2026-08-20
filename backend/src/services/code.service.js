@@ -4,13 +4,7 @@ const Code = require("../models/code.model");
 const Room = require("../models/room.model");
 
 const roomMemberService = require("./roomMember.service");
-
-class ApiError extends Error {
-  constructor(statusCode, message) {
-    super(message);
-    this.statusCode = statusCode;
-  }
-}
+const ApiError = require("../utils/ApiError");
 
 const initializeCode = async (
   roomId,

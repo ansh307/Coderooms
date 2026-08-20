@@ -6,13 +6,8 @@ const Message = require("../models/message.model");
 const Code = require("../models/code.model");
 const RoomMember = require("../models/roomMember.model");
 const { generateInviteCode } = require("../utils/InviteCode");
+const ApiError = require("../utils/ApiError");
 
-class ApiError extends Error {
-  constructor(statusCode, message) {
-    super(message);
-    this.statusCode = statusCode;
-  }
-}
 
 const SUPPORTED_LANGUAGES = [
   "javascript",

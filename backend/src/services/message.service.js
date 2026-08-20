@@ -3,13 +3,7 @@ const roomMemberService = require("./roomMember.service");
 const Message = require("../models/message.model");
 const Room =  require("../models/room.model");
 const RoomMember = require("../models/roomMember.model");
-
-class ApiError extends Error {
-  constructor(statusCode, message) {
-    super(message);
-    this.statusCode = statusCode;
-  }
-}
+const ApiError = require("../utils/ApiError");
 
 
 const sendMessage = async (roomId, userId, content) => {

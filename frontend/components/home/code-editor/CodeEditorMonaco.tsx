@@ -16,7 +16,6 @@ export default function CodeEditorMonaco({
   return (
     <Editor
       height="100%"
-      className="h-[80vh]"
       language={language}
       theme="vs-dark"
       onMount={onMount}

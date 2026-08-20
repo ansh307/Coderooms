@@ -3,6 +3,8 @@ interface CodeEditorStatusBarProps {
   column: number;
   tabSize: number;
   language: string;
+  outputOpen: boolean;
+  onToggleOutput: () => void;
 }
 
 export default function CodeEditorStatusBar({
@@ -10,6 +12,8 @@ export default function CodeEditorStatusBar({
   column,
   tabSize,
   language,
+  outputOpen,
+  onToggleOutput,
 }: CodeEditorStatusBarProps) {
   return (
     <footer className="flex h-[79px] shrink-0 items-center border-t border-border-color px-7">
@@ -18,6 +22,34 @@ export default function CodeEditorStatusBar({
       </span>
 
       <div className="ml-auto flex items-center gap-10">
+        {/* Output toggle */}
+        <button
+          type="button"
+          onClick={onToggleOutput}
+          className="
+            flex
+            items-center
+            gap-2
+            font-mono
+            text-[15px]
+            text-[#aeb4c0]
+            transition-colors
+            hover:text-white
+          "
+          aria-expanded={outputOpen}
+          aria-label={outputOpen ? "Close output" : "Open output"}
+        >
+          <span>Output</span>
+
+          <span
+            className={`text-[12px] transition-transform ${
+              outputOpen ? "rotate-180" : ""
+            }`}
+          >
+            ▲
+          </span>
+        </button>
+
         <span className="font-mono text-[15px] text-[#aeb4c0]">
           Spaces: {tabSize}
         </span>

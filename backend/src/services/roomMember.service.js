@@ -3,12 +3,7 @@ const mongoose = require("mongoose");
 const Room = require("../models/room.model");
 const RoomMember = require("../models/roomMember.model");
 
-class ApiError extends Error {
-  constructor(statusCode, message) {
-    super(message);
-    this.statusCode = statusCode;
-  }
-}
+const ApiError = require("../utils/ApiError");
 
 const joinRoom = async (roomId, userId, session = null) => {
   if (!mongoose.Types.ObjectId.isValid(roomId)) {

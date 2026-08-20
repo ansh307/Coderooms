@@ -6,50 +6,45 @@ import { api } from "@/api";
 import { getSocket } from "@/socket/socket";
 import useAuthStore from "@/store/auth.store";
 import { toast } from "sonner";
+import { CodeExecutionResult } from "@/types/code";
 
 export default function useCodeEditor() {
   const [code, setCode] = useState("");
 
-  const activeRoom = useRoomStore(
-    (state) => state.activeRoom,
-  );
+  const activeRoom = useRoomStore((state) => state.activeRoom);
 
-  const joinedRooms = useRoomStore(
-    (state) => state.joinedRooms,
-  );
+  const joinedRooms = useRoomStore((state) => state.joinedRooms);
 
-  const membershipLoading = useRoomStore(
-    (state) => state.membershipLoading,
-  );
+  const membershipLoading = useRoomStore((state) => state.membershipLoading);
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(
-    null,
-  );
+  const [error, setError] = useState<string | null>(null);
 
-  const [joinRequired, setJoinRequired] =
-    useState(false);
+  const [joinRequired, setJoinRequired] = useState(false);
 
   const [joining, setJoining] = useState(false);
 
-  const [cursorPosition, setCursorPosition] =
-    useState({
-      line: 1,
-      column: 1,
-    });
+  const [cursorPosition, setCursorPosition] = useState({
+    line: 1,
+    column: 1,
+  });
 
   const [tabSize, setTabSize] = useState(2);
 
-  const [language, setLanguage] =
-    useState("javascript");
+  const [language, setLanguage] = useState("javascript");
+
+  const [running, setRunning] = useState(false);
+
+  const [executionResult, setExecutionResult] =
+    useState<CodeExecutionResult | null>(null);
+
+  const [executionError, setExecutionError] = useState<string | null>(null);
 
   /*
    * Membership
    */
 
-  const roomMembership = activeRoom
-    ? joinedRooms[activeRoom._id]
-    : undefined;
+  const roomMembership = activeRoom ? joinedRooms[activeRoom._id] : undefined;
 
   const isMember = roomMembership === true;
 
@@ -88,18 +83,13 @@ export default function useCodeEditor() {
       setJoining(true);
       setError(null);
 
-      await api.post(
-        `/roomMember/rooms/${activeRoom._id}/join`,
-      );
+      await api.post(`/roomMember/rooms/${activeRoom._id}/join`);
 
-      useRoomStore
-        .getState()
-        .setRoomJoined(activeRoom._id);
+      useRoomStore.getState().setRoomJoined(activeRoom._id);
 
       setJoinRequired(false);
 
-      const token =
-        useAuthStore.getState().accessToken;
+      const token = useAuthStore.getState().accessToken;
 
       if (!token) {
         setError("Authentication token not found.");
@@ -128,12 +118,53 @@ export default function useCodeEditor() {
       // console.error("Failed to join room:", error);
       toast.error("Failed to join room");
 
-      setError(
-        error?.response?.data?.message ||
-          "Failed to join CodeRoom.",
-      );
+      setError(error?.response?.data?.message || "Failed to join CodeRoom.");
     } finally {
       setJoining(false);
+    }
+  };
+
+  /*
+   * Run Code
+   */
+  const handleRunCode = async () => {
+    if (!activeRoom) {
+      return;
+    }
+
+    if (joinRequired) {
+      toast.error("Join the room before running code.");
+      return;
+    }
+
+    if (!code.trim()) {
+      toast.error("Write some code before running it.");
+      return;
+    }
+
+    try {
+      setRunning(true);
+      setExecutionError(null);
+      setExecutionResult(null);
+
+      const response = await api.post("rooms/code/execute", {
+        roomId: activeRoom._id,
+        language,
+        code,
+      });
+
+      setExecutionResult(response.data.data);
+    } catch (error: any) {
+      console.error("Failed to execute code:", error);
+
+      const message =
+        error?.response?.data?.message || "Failed to execute code.";
+
+      setExecutionError(message);
+
+      toast.error(message);
+    } finally {
+      setRunning(false);
     }
   };
 
@@ -154,9 +185,7 @@ export default function useCodeEditor() {
      * Immediately clear previous room state.
      */
     setCode("");
-    setLanguage(
-      activeRoom.language || "javascript",
-    );
+    setLanguage(activeRoom.language || "javascript");
     setError(null);
 
     /*
@@ -179,8 +208,7 @@ export default function useCodeEditor() {
     setJoinRequired(false);
     setLoading(true);
 
-    const token =
-      useAuthStore.getState().accessToken;
+    const token = useAuthStore.getState().accessToken;
 
     if (!token) {
       setLoading(false);
@@ -214,11 +242,7 @@ export default function useCodeEditor() {
 
       setCode(data.content ?? "");
 
-      setLanguage(
-        data.language ||
-          activeRoom.language ||
-          "javascript",
-      );
+      setLanguage(data.language || activeRoom.language || "javascript");
 
       setLoading(false);
     };
@@ -237,11 +261,7 @@ export default function useCodeEditor() {
 
       setCode(data.content ?? "");
 
-      setLanguage(
-        data.language ||
-          activeRoom.language ||
-          "javascript",
-      );
+      setLanguage(data.language || activeRoom.language || "javascript");
     };
 
     const handleSocketError = (error: {
@@ -253,12 +273,9 @@ export default function useCodeEditor() {
 
       if (
         error.statusCode === 403 &&
-        error.message ===
-          "You are not a member of this room."
+        error.message === "You are not a member of this room."
       ) {
-        toast.error(
-          "You are not a member of this room",
-        );
+        toast.error("You are not a member of this room");
 
         setLoading(false);
         setJoinRequired(true);
@@ -268,24 +285,13 @@ export default function useCodeEditor() {
       }
 
       setLoading(false);
-      setError(
-        error.message || "Socket error occurred.",
-      );
+      setError(error.message || "Socket error occurred.");
     };
 
     socket.on("connect", handleConnect);
-    socket.on(
-      "code-loaded",
-      handleCodeLoaded,
-    );
-    socket.on(
-      "code-updated",
-      handleCodeUpdated,
-    );
-    socket.on(
-      "socket-error",
-      handleSocketError,
-    );
+    socket.on("code-loaded", handleCodeLoaded);
+    socket.on("code-updated", handleCodeUpdated);
+    socket.on("socket-error", handleSocketError);
 
     if (!socket.connected) {
       socket.connect();
@@ -299,32 +305,17 @@ export default function useCodeEditor() {
       });
 
       socket.off("connect", handleConnect);
-      socket.off(
-        "code-loaded",
-        handleCodeLoaded,
-      );
-      socket.off(
-        "code-updated",
-        handleCodeUpdated,
-      );
-      socket.off(
-        "socket-error",
-        handleSocketError,
-      );
+      socket.off("code-loaded", handleCodeLoaded);
+      socket.off("code-updated", handleCodeUpdated);
+      socket.off("socket-error", handleSocketError);
     };
-  }, [
-    activeRoom,
-    isMember,
-    isCheckingMembership,
-  ]);
+  }, [activeRoom, isMember, isCheckingMembership]);
 
   /*
    * Monaco code change
    */
 
-  const handleCodeChange = (
-    value: string | undefined,
-  ) => {
+  const handleCodeChange = (value: string | undefined) => {
     const newContent = value ?? "";
 
     setCode(newContent);
@@ -333,8 +324,7 @@ export default function useCodeEditor() {
       return;
     }
 
-    const token =
-      useAuthStore.getState().accessToken;
+    const token = useAuthStore.getState().accessToken;
 
     if (!token) {
       return;
@@ -366,8 +356,13 @@ export default function useCodeEditor() {
     cursorPosition,
     tabSize,
 
+    running,
+    executionResult,
+    executionError,
+
     handleEditorMount,
     handleJoinRoom,
     handleCodeChange,
+    handleRunCode,
   };
 }
