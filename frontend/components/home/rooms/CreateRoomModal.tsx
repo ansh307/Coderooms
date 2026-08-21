@@ -110,7 +110,7 @@ export default function CreateRoomModal({
         flex items-center justify-center
         bg-black/60
         p-4
-        backdrop-blur-[3px]
+        backdrop-blur-xs
       "
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) {
@@ -143,11 +143,11 @@ export default function CreateRoomModal({
           </div>
 
           <div className="ml-3">
-            <h2 className="text-[17px] font-semibold text-[#e7e9ee]">
+            <h2 className="text-[17px] font-semibold text-primary-heading">
               Create CodeRoom
             </h2>
 
-            <p className="mt-0.5 text-[13px] text-[#858c9b]">
+            <p className="mt-0.5 text-[13px] text-gray-muted">
               Create a room and start collaborating.
             </p>
           </div>
@@ -161,10 +161,9 @@ export default function CreateRoomModal({
               flex h-9 w-9
               items-center justify-center
               rounded-[8px]
-              text-[#858c9b]
-              transition-colors
+              text-gray-muted
               hover:bg-surface-muted
-              hover:text-[#e5e7eb]
+              hover:text-primary-not-selected
               disabled:pointer-events-none
               disabled:opacity-50
             "
@@ -180,7 +179,7 @@ export default function CreateRoomModal({
           <div>
             <label
               htmlFor="room-name"
-              className="mb-2 block text-[13px] font-medium text-[#cfd3dc]"
+              className="mb-2 block text-[13px] font-medium text-primary-heading"
             >
               Room name
             </label>
@@ -199,9 +198,9 @@ export default function CreateRoomModal({
                 bg-surface-muted
                 px-3.5
                 text-[14px]
-                text-[#e5e7eb]
+                text-primary-heading
                 outline-none
-                placeholder:text-[#626a79]
+                placeholder:text-gray-muted
                 focus:border-green-accent-muted
               "
             />
@@ -211,10 +210,10 @@ export default function CreateRoomModal({
           <div>
             <label
               htmlFor="room-description"
-              className="mb-2 block text-[13px] font-medium text-[#cfd3dc]"
+              className="mb-2 block text-[13px] font-medium text-primary-heading"
             >
               Description
-              <span className="ml-1 text-[#626a79]">(optional)</span>
+              <span className="ml-1 text-gray-muted">(optional)</span>
             </label>
 
             <textarea
@@ -233,9 +232,9 @@ export default function CreateRoomModal({
                 px-3.5
                 py-3
                 text-[14px]
-                text-[#e5e7eb]
+                text-primary-heading
                 outline-none
-                placeholder:text-[#626a79]
+                placeholder:text-gray-muted
                 focus:border-green-accent-muted
               "
             />
@@ -243,7 +242,7 @@ export default function CreateRoomModal({
 
           {/* Visibility */}
           <div>
-            <label className="mb-2 block text-[13px] font-medium text-[#cfd3dc]">
+            <label className="mb-2 block text-[13px] font-medium text-primary-heading">
               Visibility
             </label>
 
@@ -255,12 +254,14 @@ export default function CreateRoomModal({
                   "rounded-[10px] border p-3 text-left transition-all",
                   type === "public"
                     ? "border-green-accent-muted bg-surface-muted"
-                    : "border-border-color bg-surface hover:bg-surface-muted",
+                    : "border-border-color bg-surface-muted hover:bg-surface-muted",
                 ].join(" ")}
               >
-                <p className="text-[14px] font-medium text-[#e4e6ec]">Public</p>
+                <p className="text-[14px] font-medium text-primary-heading">
+                  Public
+                </p>
 
-                <p className="mt-1 text-[12px] leading-4 text-[#777f8e]">
+                <p className="mt-1 text-[12px] leading-4 text-gray-muted">
                   Anyone can discover and join.
                 </p>
               </button>
@@ -272,14 +273,14 @@ export default function CreateRoomModal({
                   "rounded-[10px] border p-3 text-left transition-all",
                   type === "private"
                     ? "border-green-accent-muted bg-surface-muted"
-                    : "border-border-color bg-surface hover:bg-surface-muted",
+                    : "border-border-color bg-surface-muted hover:bg-surface-muted",
                 ].join(" ")}
               >
-                <p className="text-[14px] font-medium text-[#e4e6ec]">
+                <p className="text-[14px] font-medium text-primary-heading">
                   Private
                 </p>
 
-                <p className="mt-1 text-[12px] leading-4 text-[#777f8e]">
+                <p className="mt-1 text-[12px] leading-4 text-gray-muted">
                   Only invited users can join.
                 </p>
               </button>
@@ -291,7 +292,7 @@ export default function CreateRoomModal({
             <div>
               <label
                 htmlFor="room-language"
-                className="mb-2 block text-[13px] font-medium text-[#cfd3dc]"
+                className="mb-2 block text-[13px] font-medium text-primary-heading"
               >
                 Language
               </label>
@@ -307,7 +308,7 @@ export default function CreateRoomModal({
                   bg-surface-muted
                   px-3
                   text-[14px]
-                  text-[#e5e7eb]
+                  text-primary-heading
                   outline-none
                   focus:border-green-accent-muted
                 "
@@ -330,7 +331,7 @@ export default function CreateRoomModal({
             <div>
               <label
                 htmlFor="room-max-users"
-                className="mb-2 block text-[13px] font-medium text-[#cfd3dc]"
+                className="mb-2 block text-[13px] font-medium text-primary-heading"
               >
                 Max users
               </label>
@@ -349,7 +350,7 @@ export default function CreateRoomModal({
                   bg-surface-muted
                   px-3
                   text-[14px]
-                  text-[#e5e7eb]
+                  text-primary-heading
                   outline-none
                   focus:border-green-accent-muted
                 "
@@ -385,10 +386,9 @@ export default function CreateRoomModal({
                 bg-surface
                 px-5
                 text-[14px] font-medium
-                text-[#b8bec9]
-                transition-colors
+                text-primary-not-selected
                 hover:bg-surface-muted
-                hover:text-[#e5e7eb]
+                hover:text-primary-heading
                 disabled:pointer-events-none
                 disabled:opacity-50
               "
@@ -405,7 +405,6 @@ export default function CreateRoomModal({
                 px-5
                 text-[14px] font-medium
                 text-white
-                transition-opacity
                 hover:opacity-90
                 disabled:pointer-events-none
                 disabled:opacity-50

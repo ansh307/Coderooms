@@ -86,7 +86,7 @@ export default function JoinRoomModal({
         flex items-center justify-center
         bg-black/60
         p-4
-        backdrop-blur-[3px]
+        backdrop-blur-xs
       "
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) {
@@ -119,11 +119,11 @@ export default function JoinRoomModal({
           </div>
 
           <div className="ml-3">
-            <h2 className="text-[17px] font-semibold text-[#e7e9ee]">
+            <h2 className="text-[17px] font-semibold text-primary-heading">
               Join a CodeRoom
             </h2>
 
-            <p className="mt-0.5 text-[13px] text-[#858c9b]">
+            <p className="mt-0.5 text-[13px] text-gray-muted">
               Enter the invite code shared with you.
             </p>
           </div>
@@ -133,14 +133,13 @@ export default function JoinRoomModal({
             onClick={handleClose}
             disabled={joiningRoom}
             className="
-              ml-auto
+               ml-auto
               flex h-9 w-9
               items-center justify-center
               rounded-[8px]
-              text-[#858c9b]
-              transition-colors
+              text-gray-muted
               hover:bg-surface-muted
-              hover:text-[#e5e7eb]
+              hover:text-primary-not-selected
               disabled:pointer-events-none
               disabled:opacity-50
             "
@@ -153,7 +152,7 @@ export default function JoinRoomModal({
         <form onSubmit={handleSubmit} className="p-6">
           <label
             htmlFor="invite-code"
-            className="mb-2 block text-[13px] font-medium text-[#cfd3dc]"
+            className="mb-2 block text-[13px] font-medium text-primary-heading"
           >
             Invite code
           </label>
@@ -174,11 +173,11 @@ export default function JoinRoomModal({
               text-[14px]
               uppercase
               tracking-[0.08em]
-              text-[#e5e7eb]
+              text-primary-heading
               outline-none
               placeholder:normal-case
               placeholder:tracking-normal
-              placeholder:text-[#626a79]
+              placeholder:text-gray-muted
               focus:border-green-accent-muted
               disabled:opacity-50
             "
@@ -196,10 +195,9 @@ export default function JoinRoomModal({
                 border border-border-color
                 px-5
                 text-[14px] font-medium
-                text-[#b8bec9]
-                transition-colors
+                text-primary-not-selected
                 hover:bg-surface-muted
-                hover:text-[#e5e7eb]
+                hover:text-primary-heading
                 disabled:pointer-events-none
                 disabled:opacity-50
               "

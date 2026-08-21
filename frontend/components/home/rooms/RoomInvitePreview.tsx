@@ -56,9 +56,11 @@ export default function RoomInvitePreview({
           </div>
 
           <div className="min-w-0">
-            <p className="text-[12px] text-[#777f8e]">You've been invited to</p>
+            <p className="text-[12px] text-gray-muted">
+              You've been invited to
+            </p>
 
-            <h1 className="truncate text-[17px] font-semibold text-[#e7e9ee]">
+            <h1 className="truncate text-[17px] font-semibold text-primary-heading">
               {room.name}
             </h1>
           </div>
@@ -71,7 +73,7 @@ export default function RoomInvitePreview({
         {/* Description */}
 
         {room.description && (
-          <p className="text-[13px] leading-5 text-[#858c9b]">
+          <p className="text-[13px] leading-5 text-gray-muted">
             {room.description}
           </p>
         )}
@@ -91,12 +93,12 @@ export default function RoomInvitePreview({
             "
           >
             <div className="flex items-center gap-2">
-              <Hash size={15} className="text-[#777f8e]" />
+              <Hash size={15} className="text-gray-muted" />
 
-              <span className="text-[11px] text-[#777f8e]">Language</span>
+              <span className="text-[11px] text-gray-muted">Language</span>
             </div>
 
-            <p className="mt-1 text-[13px] font-medium capitalize text-[#d8dce5]">
+            <p className="mt-1 text-[13px] font-medium capitalize text-primary-heading">
               {room.language}
             </p>
           </div>
@@ -113,12 +115,12 @@ export default function RoomInvitePreview({
             "
           >
             <div className="flex items-center gap-2">
-              <Users size={15} className="text-[#777f8e]" />
+              <Users size={15} className="text-gray-muted" />
 
-              <span className="text-[11px] text-[#777f8e]">Members</span>
+              <span className="text-[11px] text-gray-muted">Members</span>
             </div>
 
-            <p className="mt-1 text-[13px] font-medium text-[#d8dce5]">
+            <p className="mt-1 text-[13px] font-medium text-primary-heading">
               {room.activeUsers}/{room.maxUsers}
             </p>
           </div>
@@ -138,9 +140,9 @@ export default function RoomInvitePreview({
             "
           >
             <div className="flex items-start gap-2">
-              <Lock size={14} className="mt-0.5 shrink-0 text-[#777f8e]" />
+              <Lock size={14} className="mt-0.5 shrink-0 text-gray-muted" />
 
-              <p className="text-[12px] leading-5 text-[#777f8e]">
+              <p className="text-[12px] leading-5 text-gray-muted">
                 This is a private CodeRoom. Your request will need to be
                 approved by the room owner before you can access it.
               </p>

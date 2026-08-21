@@ -47,7 +47,7 @@ export default function InviteRoomModal({
         flex items-center justify-center
         bg-black/60
         p-4
-        backdrop-blur-[3px]
+        backdrop-blur-xs
       "
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) {
@@ -80,11 +80,11 @@ export default function InviteRoomModal({
           </div>
 
           <div className="ml-3">
-            <h2 className="text-[17px] font-semibold text-[#e7e9ee]">
+            <h2 className="text-[17px] font-semibold text-primary-heading">
               Invite Members
             </h2>
 
-            <p className="mt-0.5 text-[13px] text-[#858c9b]">
+            <p className="mt-0.5 text-[13px] text-gray-muted">
               Invite people to "{room.name}".
             </p>
           </div>
@@ -97,9 +97,11 @@ export default function InviteRoomModal({
               flex h-9 w-9
               items-center justify-center
               rounded-[8px]
-              text-[#858c9b]
+               text-gray-muted
               hover:bg-surface-muted
-              hover:text-[#e5e7eb]
+              hover:text-primary-not-selected
+              disabled:pointer-events-none
+              disabled:opacity-50
             "
           >
             <X size={19} />
@@ -109,7 +111,7 @@ export default function InviteRoomModal({
         <div className="space-y-5 p-6">
           {/* Code */}
           <div>
-            <p className="mb-2 text-[13px] font-medium text-[#cfd3dc]">
+            <p className="mb-2 text-[13px] font-medium text-primary-heading">
               Invite code
             </p>
 
@@ -125,7 +127,7 @@ export default function InviteRoomModal({
                   font-mono
                   text-[15px]
                   tracking-[0.15em]
-                  text-[#e5e7eb]
+                  text-primary-heading
                 "
               >
                 {inviteCode}
@@ -139,9 +141,9 @@ export default function InviteRoomModal({
                   items-center justify-center
                   rounded-[9px]
                   border border-border-color
-                  text-[#858c9b]
+                  text-gray-light
                   hover:bg-surface-muted
-                  hover:text-[#e5e7eb]
+                  hover:text-gray-muted
                 "
               >
                 {copied === "code" ? <Check size={17} /> : <Copy size={17} />}
@@ -151,7 +153,7 @@ export default function InviteRoomModal({
 
           {/* Link */}
           <div>
-            <p className="mb-2 text-[13px] font-medium text-[#cfd3dc]">
+            <p className="mb-2 text-[13px] font-medium text-primary-heading">
               Invite link
             </p>
 
@@ -167,9 +169,9 @@ export default function InviteRoomModal({
                 bg-surface-muted
                 text-[13px]
                 font-medium
-                text-[#b8bec9]
+                text-gray-light
                 hover:bg-surface
-                hover:text-[#e5e7eb]
+                hover:text-gray-muted
               "
             >
               {copied === "link" ? (
@@ -187,7 +189,7 @@ export default function InviteRoomModal({
           </div>
 
           <div className="rounded-[9px] border border-border-color bg-surface-muted px-3.5 py-3">
-            <p className="text-[12px] leading-5 text-[#777f8e]">
+            <p className="text-[12px] leading-5 text-gray-muted">
               Anyone with this invite can request to join. You still need to
               approve their request before they can access the room.
             </p>
