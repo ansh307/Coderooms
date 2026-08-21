@@ -19,7 +19,7 @@ export default function CodeEditorStatusBar({
 }: CodeEditorStatusBarProps) {
   return (
     <footer className="flex h-[79px] shrink-0 items-center border-t border-border-color px-7">
-      <span className="font-mono text-[15px] text-[#aeb4c0]">
+      <span className="font-mono text-[15px] text-gray-light">
         Ln {line}, Col {column}
       </span>
 
@@ -34,9 +34,9 @@ export default function CodeEditorStatusBar({
             gap-2
             font-mono
             text-[15px]
-            text-[#aeb4c0]
+            text-gray-light
             transition-colors
-            hover:text-white
+            hover:text-gray-muted
           "
           aria-expanded={outputOpen}
           aria-label={outputOpen ? "Close output" : "Open output"}
@@ -52,12 +52,12 @@ export default function CodeEditorStatusBar({
           </span>
         </button>
 
-        <span className="font-mono text-[15px] text-[#aeb4c0]">
+        <span className="font-mono text-[15px] text-gray-light">
           Spaces: {tabSize}
         </span>
 
         <div className="flex items-center gap-3">
-          <span className="font-mono text-[15px] capitalize text-[#aeb4c0]">
+          <span className="font-mono text-[15px] capitalize text-gray-light">
             {language}
           </span>
 

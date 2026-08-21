@@ -23,10 +23,9 @@ export default function MembersPanelCollapsed({
           flex h-10 w-10
           items-center justify-center
           rounded-[9px]
-          text-[#aeb4c0]
+          text-gray-light
           transition-all duration-200
           hover:bg-surface-muted
-          hover:text-white
         "
         aria-label="Open members panel"
         title="Open members panel"
@@ -49,7 +48,7 @@ export default function MembersPanelCollapsed({
           className="
             absolute
             scale-0 opacity-0
-            text-[#d8dce5]
+            text-gray-muted
             transition-all duration-200
             group-hover:scale-100
             group-hover:opacity-100
@@ -69,10 +68,9 @@ export default function MembersPanelCollapsed({
         title="Members"
         className={[
           "flex h-10 w-10 items-center justify-center rounded-[9px]",
-          "transition-all duration-200",
           activeTab === "members"
             ? "bg-green-accent-muted text-white shadow-[0_0_18px_rgba(91,75,211,0.12)]"
-            : "bg-surface-muted text-[#aeb4c0] hover:text-white",
+            : "bg-surface-muted text-gray-light hover:text-gray-muted",
         ].join(" ")}
       >
         <UsersRound size={19} strokeWidth={1.9} />
@@ -87,10 +85,9 @@ export default function MembersPanelCollapsed({
         title="Chats"
         className={[
           "mt-3 flex h-10 w-10 items-center justify-center rounded-[9px]",
-          "transition-all duration-200",
           activeTab === "chats"
             ? "bg-green-accent-muted text-white shadow-[0_0_18px_rgba(91,75,211,0.12)]"
-            : "bg-surface-muted text-[#aeb4c0] hover:text-white",
+            : "bg-surface-muted text-gray-light hover:text-gray-muted",
         ].join(" ")}
       >
         <MessageCircle size={19} strokeWidth={1.9} />

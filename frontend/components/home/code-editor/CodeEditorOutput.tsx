@@ -87,7 +87,7 @@ export default function CodeEditorOutput({
             font-medium
             uppercase
             tracking-wide
-            text-[#777f8e]
+            text-gray-muted
           "
         >
           {running
@@ -101,7 +101,7 @@ export default function CodeEditorOutput({
 
         <div className="flex items-center gap-3">
           {result?.run?.wallTime != null && (
-            <span className="font-mono text-[10px] text-[#606775]">
+            <span className="font-mono text-[10px] text-gray-muted">
               {result.run.wallTime}ms
             </span>
           )}
@@ -117,10 +117,9 @@ export default function CodeEditorOutput({
             items-center
             justify-center
             rounded
-            text-[#777f8e]
+            text-gray-muted
             transition-colors
-            hover:bg-[#1a1d24]
-            hover:text-white
+            hover:text-primary
           "
             title={`Expand to ${
               position === "bottom"
@@ -150,10 +149,9 @@ export default function CodeEditorOutput({
               items-center
               justify-center
               rounded
-              text-[#777f8e]
+              text-gray-muted
               transition-colors
-              hover:bg-[#1a1d24]
-              hover:text-white
+              hover:text-primary
             "
             title={
               position === "bottom"
@@ -177,7 +175,7 @@ export default function CodeEditorOutput({
           <div className="flex items-center gap-2">
             <span className="h-2 w-2 animate-pulse rounded-full bg-green-accent" />
 
-            <span className="font-mono text-[12px] text-[#858c9b]">
+            <span className="font-mono text-[12px] text-gray-muted">
               Executing code...
             </span>
           </div>
@@ -192,7 +190,7 @@ export default function CodeEditorOutput({
         ) : runtimeError ? (
           <>
             {result?.run?.stdout && (
-              <pre className="whitespace-pre-wrap font-mono text-[12px] text-[#d8dce5]">
+              <pre className="whitespace-pre-wrap font-mono text-[12px] text-primary-heading">
                 {result.run.stdout}
               </pre>
             )}
@@ -202,7 +200,7 @@ export default function CodeEditorOutput({
             </pre>
           </>
         ) : (
-          <pre className="whitespace-pre-wrap font-mono text-[12px] text-[#d8dce5]">
+          <pre className="whitespace-pre-wrap font-mono text-[12px] text-primary-heading">
             {result?.run?.stdout ||
               result?.run?.output ||
               "Process finished with no output."}

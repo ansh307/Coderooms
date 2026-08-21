@@ -100,7 +100,7 @@ export default function CodeEditor() {
         <CodeEditorEmpty />
 
         <footer className="flex h-[79px] shrink-0 items-center border-t border-border-color px-7">
-          <span className="font-mono text-[15px] text-[#aeb4c0]">
+          <span className="font-mono text-[15px] text-gray-light">
             Ln 1, Col 1
           </span>
         </footer>

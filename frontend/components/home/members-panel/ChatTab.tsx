@@ -31,9 +31,11 @@ export default function ChatTab({
     <div className="flex min-h-0 flex-1 w-full flex-col">
       {/* Chat header */}
       <div className="shrink-0 border-b border-border-color px-5 py-4">
-        <h2 className="text-[15px] font-medium text-[#e4e6ec]">Room Chat</h2>
+        <h2 className="text-[15px] font-medium text-secondary-title">
+          Room Chat
+        </h2>
 
-        <p className="mt-1 text-[12px] text-[#777f8e]">
+        <p className="mt-1 text-[12px] text-gray-muted">
           Chat with your room members
         </p>
       </div>
@@ -42,7 +44,7 @@ export default function ChatTab({
       <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4">
         {messagesLoading ? (
           <div className="flex h-full items-center justify-center">
-            <p className="text-[13px] text-[#858c9b]">Loading messages...</p>
+            <p className="text-[13px] text-gray-muted">Loading messages...</p>
           </div>
         ) : messagesError ? (
           <div className="flex h-full items-center justify-center px-5 text-center">
@@ -52,15 +54,15 @@ export default function ChatTab({
           <div className="flex h-full flex-col items-center justify-center text-center">
             <MessageCircle
               size={38}
-              strokeWidth={1.6}
-              className="text-[#505866]"
+              strokeWidth={1}
+              className="text-gray-light"
             />
 
-            <p className="mt-4 text-[14px] font-medium text-[#dce0e8]">
+            <p className="mt-4 text-[14px] font-medium text-secondary-title">
               No messages yet
             </p>
 
-            <p className="mt-1 max-w-[220px] text-[12px] leading-5 text-[#777f8e]">
+            <p className="mt-1 max-w-[220px] text-[12px] leading-5 text-gray-light">
               Start a conversation with your room members.
             </p>
           </div>
@@ -70,7 +72,7 @@ export default function ChatTab({
               <div key={message._id} className="flex gap-3">
                 {/* Avatar */}
                 <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-green-accent-muted">
-                  <span className="text-[12px] font-medium text-white">
+                  <span className="text-[12px] font-medium text-primary">
                     {message.sender.name?.charAt(0).toUpperCase()}
                   </span>
                 </div>
@@ -78,11 +80,11 @@ export default function ChatTab({
                 {/* Message */}
                 <div className="min-w-0 flex-1">
                   <div className="flex items-baseline justify-between gap-2">
-                    <span className="truncate text-[13px] font-medium text-[#dfe2e8]">
+                    <span className="truncate text-[13px] font-medium text-secondary-title">
                       {message.sender.name}
                     </span>
 
-                    <span className="shrink-0 text-[10px] text-[#626a78]">
+                    <span className="shrink-0 text-[10px] text-gray-muted">
                       {new Date(message.createdAt).toLocaleTimeString([], {
                         hour: "2-digit",
                         minute: "2-digit",
@@ -90,7 +92,7 @@ export default function ChatTab({
                     </span>
                   </div>
 
-                  <p className="mt-1 break-words text-[13px] leading-5 text-[#aeb4c0]">
+                  <p className="mt-1 break-words text-[13px] leading-5 text-gray-light">
                     {message.content}
                   </p>
                 </div>
@@ -116,9 +118,9 @@ export default function ChatTab({
               bg-transparent
               py-3
               text-[13px]
-              text-[#e4e6ec]
+              text-primary
               outline-none
-              placeholder:text-[#626a78]
+              placeholder:text-gray-light
             "
           />
 

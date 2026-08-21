@@ -58,7 +58,7 @@ export default function HomeLayout() {
    */
   if (isMobile) {
     return (
-      <main className="relative h-screen overflow-hidden bg-primary-foreground p-[6px] text-white">
+      <main className="relative h-screen overflow-hidden bg-primary-foreground p-[6px] text-primary">
         {/* Editor */}
         <div className="h-full w-full">
           <CodeEditor />
@@ -201,7 +201,7 @@ export default function HomeLayout() {
    * This part stays exactly the same.
    */
   return (
-    <main className="h-screen overflow-hidden bg-primary-foreground p-[10px] text-white">
+    <main className="h-screen overflow-hidden bg-primary-foreground p-[10px] text-primary">
       <div
         className={`
           grid h-full gap-[10px]

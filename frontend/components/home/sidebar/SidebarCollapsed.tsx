@@ -1,6 +1,6 @@
 "use client";
 
-import { Code2, Hash, Settings, PanelLeftOpen } from "lucide-react";
+import { Code2, Hash, Settings, PanelLeftOpen, Plus } from "lucide-react";
 
 interface SidebarCollapsedProps {
   activeRoom: any;
@@ -49,7 +49,7 @@ export default function SidebarCollapsed({
           className="
             absolute
             scale-0 opacity-0
-            text-[#d8dce5]
+            text-gray-muted
             transition-all duration-200
             group-hover:scale-100
             group-hover:opacity-100
@@ -71,9 +71,8 @@ export default function SidebarCollapsed({
           rounded-[9px]
           border border-green-accent-muted
           bg-surface-muted
-          text-[#d8dce5]
+          text-secondary-title
           shadow-[0_0_18px_rgba(91,75,211,0.08)]
-          transition-all duration-200
         "
       >
         <Hash size={20} strokeWidth={2} />
@@ -88,7 +87,7 @@ export default function SidebarCollapsed({
             w-[9px]
             rounded-full
             border-2
-            border-[#10141b]
+            border-surface
             bg-green-accent
           "
         />
@@ -104,13 +103,12 @@ export default function SidebarCollapsed({
             flex h-10 w-10
             items-center justify-center
             rounded-[9px]
-            text-[#aeb4c0]
-            transition-all duration-200
+            text-gray-light
             bg-surface-muted
-            hover:text-white
+            hover:text-primary-not-selected
           "
         >
-          +
+          <Plus className="w-5 h-5" />
         </button>
 
         {/* Settings */}
@@ -120,10 +118,9 @@ export default function SidebarCollapsed({
             flex h-10 w-10
             items-center justify-center
             rounded-[9px]
-            text-[#aeb4c0]
-            transition-all duration-200
+            text-gray-light
             hover:bg-surface-muted
-            hover:text-white
+            hover:text-primary-not-selected
           "
         >
           <Settings size={19} strokeWidth={1.9} />

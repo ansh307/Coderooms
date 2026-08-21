@@ -94,15 +94,15 @@ export default function MembersPanel({ open, onToggle }: MembersPanelProps) {
           <div className="text-center">
             <UsersRound
               size={38}
-              strokeWidth={1.5}
-              className="mx-auto text-[#505866]"
+              strokeWidth={1}
+              className="mx-auto text-gray-muted"
             />
 
-            <p className="mt-4 text-[14px] font-medium text-[#858c9b]">
+            <p className="mt-4 text-[14px] font-medium text-gray-light">
               No room selected
             </p>
 
-            <p className="mt-1 text-[12px] leading-5 text-[#606775]">
+            <p className="mt-1 text-[12px] leading-5 text-gray-muted">
               Select a room to view members and chat.
             </p>
           </div>

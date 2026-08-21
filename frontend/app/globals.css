@@ -1,9 +1,6 @@
 @import "tailwindcss";
 
 :root {
-  background: #0b0e13;
-  color: #ffffff;
-
   --color-surface: #191a1b;
   --color-surface-muted: #2c2c2c;
   --color-green-accent: #65c97b;
@@ -11,19 +8,65 @@
 
   --color-border-color: #373838;
 
+  --color-gray-muted: #6f7787;
+  --color-gray-light: #aeb4c0;
+
   --color-primary: #ffffff;
+  --color-primary-heading: #60646c;
+  --color-secondary-title: #dfe2e8;
   --color-primary-foreground: #121314;
+}
+
+.dark {
+  --color-surface: #191a1b;
+  --color-surface-muted: #2c2c2c;
+  --color-green-accent: #65c97b;
+  --color-green-accent-muted: #397d48;
+
+  --color-border-color: #373838;
+
+  --color-gray-light: #aeb4c0;
+
+  --color-primary: #e8ebf0;
+  --color-primary-heading: #d4d8e1;
+  --color-primary-not-selected: #d4d8e1;
+  --color-secondary-title: #dfe2e8;
+  --color-primary-foreground: #0b0e13;
+}
+
+.light {
+  --color-surface: #ffffff;
+  --color-surface-muted: #f1f2f4;
+  --color-green-accent: #2f9e44;
+  --color-green-accent-muted: #65c97b;
+
+  --color-border-color: #d8dadd;
+
+  --color-gray-light: #999faa;
+
+  --color-primary: #121314;
+  --color-primary-heading: #60646c;
+  --color-primary-not-selected: #161718;
+  --color-secondary-title: #161718;
+  --color-primary-foreground: #f7f8fa;
 }
 
 @theme {
   --color-surface: var(--color-surface);
   --color-surface-muted: var(--color-surface-muted);
+
   --color-green-accent: var(--color-green-accent);
   --color-green-accent-muted: var(--color-green-accent-muted);
 
   --color-border-color: var(--color-border-color);
 
+  --color-gray-muted: var(--color-gray-muted);
+  --color-gray-light: var(--color-gray-light);
+
   --color-primary: var(--color-primary);
+  --color-primary-heading: var(--color-primary-heading);
+  --color-primary-not-selected: var(--color-primary-not-selected);
+  --color-secondary-title: var(--color-secondary-title);
   --color-primary-foreground: var(--color-primary-foreground);
 }
 
@@ -41,6 +84,7 @@ body {
 
 body {
   background: var(--color-primary-foreground);
+  color: var(--color-primary);
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -56,10 +100,10 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background:  var(--color-surface-muted);
+  background: var(--color-surface-muted);
   border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background:  var(--color-border-color);
+  background: var(--color-border-color);
 }

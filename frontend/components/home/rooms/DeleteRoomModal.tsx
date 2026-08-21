@@ -30,11 +30,11 @@ export default function DeleteRoomModal({
             </div>
 
             <div>
-              <h2 className="text-sm font-semibold text-[#e8ebf0]">
+              <h2 className="text-sm font-semibold text-gray-muted">
                 Delete CodeRoom
               </h2>
 
-              <p className="mt-0.5 text-xs text-[#777f8e]">
+              <p className="mt-0.5 text-xs text-gray-muted">
                 This action cannot be undone.
               </p>
             </div>
@@ -44,7 +44,7 @@ export default function DeleteRoomModal({
             type="button"
             onClick={onClose}
             disabled={loading}
-            className="flex h-7 w-7 items-center justify-center rounded-md text-[#777f8e] transition-colors hover:bg-surface-muted hover:text-[#d8dce5] disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex h-7 w-7 items-center justify-center rounded-md text-gray-muted transition-colors hover:bg-surface-muted hover:text-gray-muted disabled:cursor-not-allowed disabled:opacity-50"
           >
             <X size={16} />
           </button>
@@ -52,12 +52,15 @@ export default function DeleteRoomModal({
 
         {/* Content */}
         <div className="px-5 py-5">
-          <p className="text-sm leading-6 text-[#aeb4c0]">
+          <p className="text-sm leading-6 text-gray-light">
             Are you sure you want to delete{" "}
-            <span className="font-medium text-[#e4e6ec]">"{roomName}"</span>?
+            <span className="font-medium text-secondary-title">
+              "{roomName}"
+            </span>
+            ?
           </p>
 
-          <p className="mt-2 text-xs leading-5 text-[#6f7787]">
+          <p className="mt-2 text-xs leading-5 text-gray-muted">
             All data associated with this CodeRoom will be permanently removed.
           </p>
         </div>
@@ -68,7 +71,7 @@ export default function DeleteRoomModal({
             type="button"
             onClick={onClose}
             disabled={loading}
-            className="rounded-[9px] border border-border-color px-4 py-2 text-sm font-medium text-[#aeb4c0] transition-colors hover:bg-surface-muted hover:text-[#e4e6ec] disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-[9px] border border-border-color px-4 py-2 text-sm font-medium text-gray-light transition-colors hover:bg-surface-muted hover:text-gray-muted disabled:cursor-not-allowed disabled:opacity-50"
           >
             Cancel
           </button>

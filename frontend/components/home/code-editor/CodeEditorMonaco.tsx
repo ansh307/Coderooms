@@ -1,4 +1,6 @@
+import { useThemeStore } from "@/store/theme-store";
 import Editor, { OnMount } from "@monaco-editor/react";
+import { useEffect, useState } from "react";
 
 interface CodeEditorMonacoProps {
   code: string;
@@ -13,11 +15,32 @@ export default function CodeEditorMonaco({
   onMount,
   onChange,
 }: CodeEditorMonacoProps) {
+  const { theme } = useThemeStore();
+
+  const [systemTheme, setSystemTheme] = useState<"light" | "dark">("light");
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
+    const updateSystemTheme = () => {
+      setSystemTheme(mediaQuery.matches ? "dark" : "light");
+    };
+
+    updateSystemTheme();
+
+    mediaQuery.addEventListener("change", updateSystemTheme);
+
+    return () => {
+      mediaQuery.removeEventListener("change", updateSystemTheme);
+    };
+  }, []);
+
+  const resolvedTheme = theme === "system" ? systemTheme : theme;
   return (
     <Editor
       height="100%"
       language={language}
-      theme="vs-dark"
+      theme={resolvedTheme === "dark" ? "vs-dark" : "vs-light"}
       onMount={onMount}
       value={code}
       onChange={onChange}

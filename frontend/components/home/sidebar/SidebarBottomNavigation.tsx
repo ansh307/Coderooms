@@ -22,24 +22,22 @@ export default function SidebarBottomNavigation({
           border border-border-color
           bg-surface
           px-5
-          transition-colors
           hover:bg-surface-muted
         "
         >
           <span
             className="
-            
             flex h-7 w-7
             items-center justify-center
             rounded-[7px]
             bg-surface-muted
             text-[18px]
-            text-[#d9dde6]
+            text-gray-muted
           "
           >
             +
           </span>
-          <span className="ml-4 text-[16px] font-medium text-[#e1e4eb]">
+          <span className="ml-4 text-[16px] font-medium text-primary-heading">
             Create
           </span>
         </button>
@@ -52,13 +50,12 @@ export default function SidebarBottomNavigation({
           border border-border-color
           bg-surface
           px-5
-          transition-colors
           hover:bg-surface-muted
         "
         >
-          <UsersRound size={18} className="text-[#e0e3eb]" />
+          <UsersRound size={18} className="text-primary-heading" />
 
-          <span className="ml-4 text-[16px] font-medium text-[#e1e4eb]">
+          <span className="ml-4 text-[16px] font-medium text-primary-heading">
             Join Room
           </span>
         </button>
@@ -70,13 +67,12 @@ export default function SidebarBottomNavigation({
           border border-border-color
           bg-surface
           px-5
-          transition-colors
           hover:bg-surface-muted
         "
       >
-        <Settings size={18} className="text-[#d9dde6]" />
+        <Settings size={18} className="text-primary-heading" />
 
-        <span className="ml-4 text-[16px] font-medium text-[#e1e4eb]">
+        <span className="ml-4 text-[16px] font-medium text-primary-heading">
           Settings
         </span>
       </button>

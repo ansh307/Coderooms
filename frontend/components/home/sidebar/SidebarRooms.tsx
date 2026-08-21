@@ -93,17 +93,17 @@ function RoomSection({
     "
       >
         <div className="flex items-center gap-2">
-          <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#777f8e]">
+          <span className="text-[11px] font-semibold tracking-[0.08em] text-gray-muted">
             {title}
           </span>
 
-          <span className="text-[10px] text-[#555d6c]">{rooms.length}</span>
+          <span className="text-[10px] text-gray-muted">{rooms.length}</span>
         </div>
 
         <ChevronDown
           size={15}
           className={[
-            "text-[#666e7d] transition-transform duration-200",
+            "text-gray-muted transition-transform duration-200",
             open ? "rotate-0" : "-rotate-90",
           ].join(" ")}
         />
@@ -125,7 +125,7 @@ function RoomSection({
           ].join(" ")}
         >
           {rooms.length === 0 ? (
-            <div className="px-2 py-3 text-xs text-[#606878]">No rooms</div>
+            <div className="px-2 py-3 text-xs text-gray-muted">No rooms</div>
           ) : (
             <div className="space-y-1">
               {rooms.map((room) => {
@@ -155,7 +155,7 @@ function RoomSection({
                       <div
                         className={[
                           "flex h-8 w-8 shrink-0 items-center justify-center rounded-[8px]",
-                          selected ? "text-green-accent" : "text-[#aeb4c0]",
+                          selected ? "text-green-accent" : "text-gray-light",
                           "bg-surface-muted",
                         ].join(" ")}
                       >
@@ -166,14 +166,16 @@ function RoomSection({
                         <p
                           className={[
                             "truncate text-[14px] font-medium",
-                            selected ? "text-[#e8ebf0]" : "text-[#d4d8e1]",
+                            selected
+                              ? "text-primary"
+                              : "text-primary-not-selected",
                           ].join(" ")}
                         >
                           {room.name}
                         </p>
 
                         {room.language && (
-                          <p className="mt-0.5 truncate text-[11px] capitalize text-[#6f7787]">
+                          <p className="mt-0.5 truncate text-[11px] capitalize text-gray-muted">
                             {room.language}
                           </p>
                         )}
@@ -194,12 +196,12 @@ function RoomSection({
                           }}
                           className={[
                             "flex h-7 w-7 items-center justify-center rounded-md",
-                            "text-[#666e7d] transition-all duration-150",
+                            "text-gray-muted transition-all duration-150",
                             "opacity-0 group-hover:opacity-100",
-                            "hover:text-[#d8dce5]",
+                            "hover:text-primary-not-selected",
                             selected ? "opacity-50" : "",
                             menuOpen === room._id
-                              ? "opacity-100 text-[#d8dce5]"
+                              ? "opacity-100 text-primary-not-selected"
                               : "",
                           ].join(" ")}
                         >
@@ -244,10 +246,10 @@ function RoomSection({
                                       py-2
                                       text-left
                                       text-sm
-                                      text-[#d8dce5]
+                                      text-primary-not-selected
                                       transition-colors
                                       hover:bg-surface-muted
-                                      hover:text-white
+                                      hover:text-primary
                                   "
                                 >
                                   <Link2 size={14} strokeWidth={1.8} />
@@ -265,19 +267,19 @@ function RoomSection({
                                 onEditRoom?.(room);
                               }}
                               className="
-                            flex
-                            w-full
-                            items-center
-                            gap-2
-                            rounded-[7px]
-                            px-3
-                            py-2
-                            text-left
-                            text-sm
-                            text-[#d8dce5]
-                            transition-colors
-                            hover:bg-surface-muted
-                            hover:text-white
+                                      flex
+                                      w-full
+                                      items-center
+                                      gap-2
+                                      rounded-[7px]
+                                      px-3
+                                      py-2
+                                      text-left
+                                      text-sm
+                                      text-primary-not-selected
+                                      transition-colors
+                                      hover:bg-surface-muted
+                                      hover:text-primary
                           "
                             >
                               <Pencil size={14} strokeWidth={1.8} />
@@ -330,7 +332,7 @@ function RoomSection({
                             py-1.5
                             text-[11px]
                             font-medium
-                            text-[#aeb4c0]
+                            text-gray-muted
                             transition-colors
                             hover:border-green-accent-muted
                             hover:bg-surface
@@ -373,13 +375,13 @@ export default function SidebarRooms({
       {/* Loading */}
       {loading && (
         <div className="flex h-full items-center justify-center">
-          <p className="text-[#858c9b] text-xs">Loading...</p>
+          <p className="text-gray-muted text-xs">Loading...</p>
         </div>
       )}
 
       {/* Error */}
       {!loading && error && (
-        <div className="rounded-[12px] border border-border-color bg-surface-muted p-4 text-sm text-[#aeb4c0]">
+        <div className="rounded-[12px] border border-border-color bg-surface-muted p-4 text-sm text-gray-muted">
           {error}
         </div>
       )}
@@ -425,13 +427,13 @@ export default function SidebarRooms({
             myRooms.length === 0 &&
             joinedRooms.length === 0 && (
               <div className="px-3 py-8 text-center">
-                <Hash size={24} className="mx-auto mb-3 text-[#606878]" />
+                <Hash size={24} className="mx-auto mb-3 text-gray-muted" />
 
-                <p className="text-sm font-medium text-[#d8dce5]">
+                <p className="text-sm font-medium text-primary-not-selected">
                   No CodeRooms
                 </p>
 
-                <p className="mt-1 text-xs leading-5 text-[#858c9b]">
+                <p className="mt-1 text-xs leading-5 text-gray-light">
                   Create a CodeRoom to start collaborating.
                 </p>
               </div>

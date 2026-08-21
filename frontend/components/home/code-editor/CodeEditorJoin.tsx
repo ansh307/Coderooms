@@ -24,11 +24,11 @@ export default function CodeEditorJoin({
           <Code2 size={23} strokeWidth={2} />
         </div>
 
-        <h2 className="mt-5 text-[17px] font-semibold text-[#e4e6ec]">
+        <h2 className="mt-5 text-[17px] font-semibold text-primary-heading">
           Join this CodeRoom
         </h2>
 
-        <p className="mt-2 text-[13px] leading-5 text-[#858c9b]">
+        <p className="mt-2 text-[13px] leading-5 text-gray-muted">
           You are not a member of this public CodeRoom. Join the room to view
           and collaborate on the code.
         </p>

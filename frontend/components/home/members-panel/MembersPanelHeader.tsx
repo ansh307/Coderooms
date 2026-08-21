@@ -58,10 +58,9 @@ export default function MembersPanelHeader({
           items-center justify-center
           self-center
           rounded-[8px]
-          text-[#858c9b]
-          transition-all duration-200
+          text-gray-muted
           hover:bg-surface-muted
-          hover:text-[#e5e7eb]
+          hover:text-primary-heading
         "
         aria-label="Collapse members panel"
         title="Collapse members panel"

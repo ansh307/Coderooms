@@ -49,11 +49,11 @@ export default function MembersTab({
       {/* Members header */}
       <div className="flex shrink-0 items-center justify-between border-b border-border-color px-5 py-4">
         <div>
-          <h2 className="text-[15px] font-medium text-[#e4e6ec]">
+          <h2 className="text-[15px] font-medium text-primary-heading">
             Room Members
           </h2>
 
-          <p className="mt-1 text-[12px] text-[#777f8e]">
+          <p className="mt-1 text-[12px] text-gray-light">
             {members.length} member
             {members.length !== 1 ? "s" : ""}
           </p>
@@ -66,19 +66,18 @@ export default function MembersTab({
               type="button"
               onClick={() => setShowJoinRequests(true)}
               className="
-          relative
-          flex h-9
-          items-center gap-2
-          rounded-[8px]
-          border border-border-color
-          bg-surface-muted
-          px-3
-          text-[12px]
-          font-medium
-          text-[#858c9b]
-          transition-colors
-          hover:text-white
-        "
+                  relative
+                  flex h-9
+                  items-center gap-2
+                  rounded-[8px]
+                  border border-border-color
+                  bg-surface-muted
+                  px-3
+                  text-[12px]
+                  font-medium
+                  text-gray-light
+                  hover:text-primary-heading
+              "
               title="Join requests"
             >
               <Users size={15} />
@@ -109,13 +108,13 @@ export default function MembersTab({
             onClick={() => setInviteRoom(activeRoom)}
             type="button"
             className="
-        flex h-9 w-9
-        items-center justify-center
-        rounded-[8px]
-        text-[#858c9b]
-        transition-colors
-        hover:bg-surface-muted
-        hover:text-white
+              flex h-9 w-9
+              items-center justify-center
+              rounded-[8px]
+              transition-colors
+              text-gray-light
+              hover:text-primary-heading
+              hover:bg-surface-muted
       "
             title="Invite members"
           >
@@ -127,7 +126,7 @@ export default function MembersTab({
       <div className="min-h-0 flex-1 overflow-y-auto p-3">
         {membersLoading ? (
           <div className="flex h-full items-center justify-center">
-            <p className="text-[13px] text-[#858c9b]">Loading members...</p>
+            <p className="text-[13px] text-gray-muted">Loading members...</p>
           </div>
         ) : membersError ? (
           <div className="flex h-full items-center justify-center px-5 text-center">
@@ -139,10 +138,10 @@ export default function MembersTab({
               <UsersRound
                 size={36}
                 strokeWidth={1.6}
-                className="mx-auto text-[#505866]"
+                className="mx-auto text-gray-muted"
               />
 
-              <p className="mt-4 text-[14px] text-[#858c9b]">
+              <p className="mt-4 text-[14px] text-gray-muted">
                 No members found.
               </p>
             </div>
@@ -156,24 +155,23 @@ export default function MembersTab({
                   flex items-center gap-3
                   rounded-[10px]
                   px-3 py-3
-                  transition-colors
                   hover:bg-surface-muted
                 "
               >
                 {/* Avatar */}
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-green-accent-muted">
-                  <span className="text-[13px] font-medium text-white">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-green-accent-muted">
+                  <span className="text-[12px] font-medium text-primary">
                     {member?.user?.name?.charAt(0).toUpperCase()}
                   </span>
                 </div>
 
                 {/* User info */}
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-[14px] font-medium text-[#dfe2e8]">
+                  <p className="truncate text-[14px] font-medium text-primary-heading">
                     {member?.user?.name}
                   </p>
 
-                  <p className="mt-0.5 text-[11px] capitalize text-[#777f8e]">
+                  <p className="mt-0.5 text-[11px] capitalize text-gray-muted">
                     {member?.role}
                   </p>
                 </div>
@@ -191,6 +189,7 @@ export default function MembersTab({
       fixed inset-0 z-50
       flex items-center justify-center
       bg-black/50
+      backdrop-blur-xs
       px-4
     "
           onMouseDown={() => setShowJoinRequests(false)}
@@ -216,11 +215,11 @@ export default function MembersTab({
         "
             >
               <div>
-                <h3 className="text-[15px] font-medium text-[#e4e6ec]">
+                <h3 className="text-[15px] font-medium text-primary-heading">
                   Join Requests
                 </h3>
 
-                <p className="mt-1 text-[11px] text-[#777f8e]">
+                <p className="mt-1 text-[11px] text-gray-muted">
                   {joinRequests.length} pending request
                   {joinRequests.length !== 1 ? "s" : ""}
                 </p>
@@ -233,9 +232,9 @@ export default function MembersTab({
             flex h-8 w-8
             items-center justify-center
             rounded-[8px]
-            text-[#777f8e]
+            text-gray-muted
             hover:bg-surface-muted
-            hover:text-white
+            hover:text-primary-heading
           "
               >
                 <X size={17} />
@@ -247,7 +246,7 @@ export default function MembersTab({
             <div className="max-h-[420px] overflow-y-auto p-3">
               {joinRequestsLoading ? (
                 <div className="flex h-32 items-center justify-center">
-                  <p className="text-[13px] text-[#858c9b]">
+                  <p className="text-[13px] text-gray-muted">
                     Loading requests...
                   </p>
                 </div>
@@ -263,10 +262,10 @@ export default function MembersTab({
                     <UserPlus
                       size={30}
                       strokeWidth={1.5}
-                      className="mx-auto text-[#505866]"
+                      className="mx-auto text-gray-muted"
                     />
 
-                    <p className="mt-3 text-[13px] text-[#858c9b]">
+                    <p className="mt-3 text-[13px] text-gray-light">
                       No pending requests.
                     </p>
                   </div>
@@ -298,7 +297,7 @@ export default function MembersTab({
                       bg-green-accent-muted
                     "
                         >
-                          <span className="text-[13px] font-medium text-white">
+                          <span className="text-[13px] font-medium text-primary-heading">
                             {request.user.name?.charAt(0).toUpperCase()}
                           </span>
                         </div>
@@ -306,18 +305,18 @@ export default function MembersTab({
                         {/* User */}
 
                         <div className="min-w-0 flex-1">
-                          <p className="truncate text-[13px] font-medium text-[#dfe2e8]">
+                          <p className="truncate text-[13px] font-medium text-primary-heading">
                             {request.user.name}
                           </p>
 
-                          <p className="mt-0.5 truncate text-[11px] text-[#777f8e]">
+                          <p className="mt-0.5 truncate text-[11px] text-gray-muted">
                             {request.user.email}
                           </p>
                         </div>
 
                         {/* Actions */}
 
-                        <div className="flex shrink-0 items-center gap-1">
+                        <div className="flex shrink-0 items-center gap-2">
                           {/* Reject */}
 
                           <button
@@ -328,7 +327,7 @@ export default function MembersTab({
                         flex h-8 w-8
                         items-center justify-center
                         rounded-[7px]
-                        text-[#858c9b]
+                        text-gray-muted
                         hover:bg-red-500/10
                         hover:text-red-400
                         disabled:opacity-50

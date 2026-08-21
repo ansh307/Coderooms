@@ -1,4 +1,6 @@
-import { Code2, Expand, Sun, Play, Pause } from "lucide-react";
+import { Code2, Expand, Sun, Play, Pause, Moon } from "lucide-react";
+
+import { useThemeStore } from "@/store/theme-store";
 
 interface CodeEditorHeaderProps {
   roomName?: string;
@@ -12,6 +14,17 @@ export default function CodeEditorHeader({
   onRun,
   running,
 }: CodeEditorHeaderProps) {
+  const theme = useThemeStore((state) => state.theme);
+  const setTheme = useThemeStore((state) => state.setTheme);
+
+  const toggleTheme = () => {
+    if (theme === "dark") {
+      setTheme("light");
+    } else {
+      setTheme("dark");
+    }
+  };
+
   return (
     <header className="flex h-[79px] shrink-0 items-center border-b border-border-color px-7">
       <div
@@ -25,21 +38,21 @@ export default function CodeEditorHeader({
 
         {roomName ? (
           <>
-            <span className="text-[21px] font-medium text-[#eceef4] hidden md:block">
+            <span className="text-[21px] font-medium text-primary-heading hidden md:block">
               {roomName}
             </span>
 
-            <span className="text-[21px] font-medium text-[#eceef4] block md:hidden">
+            <span className="text-[21px] font-medium text-primary-heading block md:hidden">
               {roomName}
             </span>
           </>
         ) : (
           <>
-            <span className="hidden text-[21px] font-medium text-[#eceef4] md:block">
+            <span className="hidden text-[21px] font-medium text-primary-heading md:block">
               Code
             </span>
 
-            <span className="block text-[21px] font-medium text-[#eceef4] md:hidden">
+            <span className="block text-[21px] font-medium text-primary-heading md:hidden">
               Coderooms
             </span>
           </>
@@ -48,10 +61,17 @@ export default function CodeEditorHeader({
 
       <div className="ml-auto flex items-center gap-5">
         <button
-          className="text-[#d9dde5] transition-colors hover:text-white"
+          type="button"
+          onClick={toggleTheme}
+          className="text-primary-heading hover:opacity-70"
           aria-label="Toggle theme"
+          title={`Theme: ${theme}`}
         >
-          <Sun size={24} strokeWidth={1.8} />
+          {theme === "dark" ? (
+            <Sun size={24} strokeWidth={1.8} />
+          ) : (
+            <Moon size={24} strokeWidth={1.8} />
+          )}
         </button>
 
         {roomName && (
@@ -66,9 +86,9 @@ export default function CodeEditorHeader({
               gap-2           
               px-3
               text-[12px]
-              text-[#d9dde5] 
+              text-primary-heading
               transition-colors
-              hover:text-white
+              hover:text-primary-heading
               font-medium
               hover:opacity-90
               disabled:pointer-events-none
@@ -81,7 +101,7 @@ export default function CodeEditorHeader({
         )}
 
         <button
-          className="text-[#d9dde5] transition-colors hover:text-white"
+          className="text-primary-heading hover:text-primary"
           aria-label="Fullscreen"
         >
           <Expand size={23} strokeWidth={1.8} />
