@@ -1,3 +1,18 @@
+const SUPPORTED_LANGUAGES = [
+  "javascript",
+  "typescript",
+  "python",
+  "java",
+  "cpp",
+  "c",
+  "go",
+  "rust",
+  "ruby",
+  "php",
+  "kotlin",
+  "swift"
+];
+
 const LANGUAGE_MAP = {
   javascript: "javascript",
   js: "javascript",
@@ -38,4 +53,6 @@ const getExecutionLanguage = (language) => {
 
 module.exports = {
   getExecutionLanguage,
+  LANGUAGE_MAP,
+  SUPPORTED_LANGUAGES
 };

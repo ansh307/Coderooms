@@ -1,80 +1,55 @@
 const ApiError = require("../utils/ApiError");
 
-const {
-  getExecutionLanguage,
-} = require("../utils/codeLanguage");
+const { getExecutionLanguage } = require("../utils/codeLanguage");
 
-const PISTON_URL =
-  process.env.PISTON_URL ||
-  "http://localhost:2000/api/v2";
+const PISTON_URL = process.env.PISTON_URL || "http://localhost:2000/api/v2";
 
 const MAX_CODE_LENGTH = 50_000;
 const MAX_INPUT_LENGTH = 10_000;
 
-const execute = async ({
-  language,
-  code,
-  stdin = "",
-}) => {
+const execute = async ({ language, code, stdin = "" }) => {
   if (!code || typeof code !== "string") {
-    throw new ApiError(
-      400,
-      "Code is required.",
-    );
+    throw new ApiError(400, "Code is required.");
   }
 
   if (code.length > MAX_CODE_LENGTH) {
-    throw new ApiError(
-      400,
-      "Code is too large.",
-    );
+    throw new ApiError(400, "Code is too large.");
   }
 
   if (stdin.length > MAX_INPUT_LENGTH) {
-    throw new ApiError(
-      400,
-      "Input is too large.",
-    );
+    throw new ApiError(400, "Input is too large.");
   }
 
-  const executionLanguage =
-    getExecutionLanguage(language);
+  const executionLanguage = getExecutionLanguage(language);
 
   if (!executionLanguage) {
-    throw new ApiError(
-      400,
-      `Code execution is not supported for ${language}.`,
-    );
+    throw new ApiError(400, `Code execution is not supported for ${language}.`);
   }
 
-  const response = await fetch(
-    `${PISTON_URL}/execute`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        language: executionLanguage,
-        version: "*",
-        files: [
-          {
-            name: "main",
-            content: code,
-          },
-        ],
-        stdin,
-      }),
+  const response = await fetch(`${PISTON_URL}/execute`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
     },
-  );
+    body: JSON.stringify({
+      language: executionLanguage,
+      version: "*",
+      files: [
+        {
+          name: "main",
+          content: code,
+        },
+      ],
+      stdin,
+    }),
+  });
 
   const data = await response.json();
 
   if (!response.ok) {
     throw new ApiError(
       response.status,
-      data?.message ||
-        "Code execution failed.",
+      data?.message || "Code execution failed.",
     );
   }
 

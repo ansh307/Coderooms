@@ -318,6 +318,12 @@ export default function CreateRoomModal({
                 <option value="java">Java</option>
                 <option value="cpp">C++</option>
                 <option value="c">C</option>
+                <option value="go">Go</option>
+                <option value="rust">Rust</option>
+                <option value="ruby">Ruby</option>
+                <option value="php">PHP</option>
+                <option value="kotlin">Kotlin</option>
+                <option value="swift">Swift</option>
               </select>
             </div>
 

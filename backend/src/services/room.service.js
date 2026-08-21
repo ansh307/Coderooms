@@ -7,18 +7,7 @@ const Code = require("../models/code.model");
 const RoomMember = require("../models/roomMember.model");
 const { generateInviteCode } = require("../utils/InviteCode");
 const ApiError = require("../utils/ApiError");
-
-
-const SUPPORTED_LANGUAGES = [
-  "javascript",
-  "typescript",
-  "python",
-  "java",
-  "cpp",
-  "c",
-  "go",
-  "rust",
-];
+const { SUPPORTED_LANGUAGES } = require("../utils/codeLanguage");
 
 const createRoom = async (data, user) => {
   const session = await mongoose.startSession();

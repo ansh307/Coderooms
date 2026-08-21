@@ -1,0 +1,21 @@
+services:
+  api:
+    image: ghcr.io/engineer-man/piston
+    container_name: piston_api
+    restart: always
+    privileged: true
+
+    ports:
+      - "2000:2000"
+
+    environment:
+      PISTON_COMPILE_TIMEOUT: 30000
+      PISTON_RUN_TIMEOUT: 10000
+      PISTON_COMPILE_CPU_TIME: 30000
+      PISTON_RUN_CPU_TIME: 10000
+
+    volumes:
+      - ../piston/data/piston/packages:/piston/packages
+
+    tmpfs:
+      - /tmp:exec

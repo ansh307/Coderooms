@@ -31,6 +31,8 @@ export default function CodeEditorOutput({
 
   const runtimeError = result?.run?.stderr;
 
+  console.log(result);
+
   const handleToggleSize = () => {
     if (position === "right") {
       const sizes: OutputSizes[] = [400, 500, 600];
