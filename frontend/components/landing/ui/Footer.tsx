@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Code2, MessageCircle, Globe2, ChevronDown } from "lucide-react";
+import { Code2 } from "lucide-react";
 
 const footerLinks = {
   Product: [
@@ -8,23 +8,25 @@ const footerLinks = {
     { label: "Use cases", href: "#use-cases" },
     { label: "Pricing", href: "/pricing" },
   ],
+
   Resources: [
     { label: "Documentation", href: "/docs" },
     { label: "Blog", href: "/blog" },
     { label: "FAQ", href: "/faq" },
     { label: "Help Center", href: "/help" },
   ],
+
   Company: [
     { label: "About", href: "/about" },
     { label: "Contact", href: "/contact" },
     { label: "Privacy", href: "/privacy" },
     { label: "Terms", href: "/terms" },
   ],
-  Developers: [
-    { label: "API", href: "/api" },
-    { label: "Integrations", href: "/integrations" },
-    { label: "GitHub", href: "https://github.com" },
-    { label: "Status", href: "/status" },
+
+  Community: [
+    { label: "Discord", href: "https://discord.com/users/630030470889078805" },
+    { label: "GitHub", href: "https://github.com/ansh307/" },
+    { label: "Twitter", href: "https://x.com/anshjz" },
   ],
 };
 

@@ -9,15 +9,13 @@ import UseCases from "@/components/landing/UseCases";
 
 export default function Home() {
   return (
-    <div className="">
-      <Navbar />
+    <main className="">
       <Hero />
       <FeaturePreview />
       <Features />
       <HowItWorks />
       <UseCases />
       <FinalCTA />
-      <Footer />
-    </div>
+    </main>
   );
 }
