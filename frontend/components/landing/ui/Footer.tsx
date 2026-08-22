@@ -1,11 +1,14 @@
+"use client";
+
 import Link from "next/link";
 import { Code2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const footerLinks = {
   Product: [
-    { label: "Features", href: "#features" },
-    { label: "How it works", href: "#how-it-works" },
-    { label: "Use cases", href: "#use-cases" },
+    { label: "Features", href: "/#features" },
+    { label: "How it works", href: "/#how-it-works" },
+    { label: "Use cases", href: "/#use-cases" },
     { label: "Pricing", href: "/pricing" },
   ],
 
@@ -31,6 +34,44 @@ const footerLinks = {
 };
 
 export default function Footer() {
+  const router = useRouter();
+
+  const handleNavigation = (href: string) => {
+    // Normal links and external links
+    if (!href.startsWith("#")) {
+      if (href.startsWith("http")) {
+        window.open(href, "_blank", "noopener,noreferrer");
+        return;
+      }
+
+      router.push(href);
+      return;
+    }
+
+    // If we're on another route, go to homepage with the hash
+    if (window.location.pathname !== "/") {
+      router.push(`/${href}`);
+      return;
+    }
+
+    // Already on homepage — smooth scroll
+    const element = document.querySelector(href);
+
+    if (element) {
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+
+      // Remove hash after scrolling starts
+      window.history.replaceState(
+        null,
+        "",
+        window.location.pathname + window.location.search,
+      );
+    }
+  };
+
   return (
     <footer className="border-t border-border-color">
       <div className="mx-auto max-w-[1180px] ">

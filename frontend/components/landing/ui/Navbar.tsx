@@ -3,9 +3,10 @@
 import Link from "next/link";
 import { Code2 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 const navLinks = [
-  { label: "Features", href: "#features" },
+  { label: "Features", href: "/#features" },
   { label: "Pricing", href: "/pricing" },
   { label: "FAQ", href: "/faq" },
   { label: "Blog", href: "/blog" },
@@ -24,6 +25,29 @@ export default function Navbar() {
 
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const router = useRouter();
+
+  const handleNavigation = (href: string) => {
+    if (!href.startsWith("#")) {
+      router.push(href);
+      return;
+    }
+
+    if (window.location.pathname !== "/") {
+      router.push(`/${href}`);
+      return;
+    }
+
+    const element = document.querySelector(href);
+
+    if (element) {
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  };
 
   return (
     <header
@@ -77,13 +101,14 @@ export default function Navbar() {
         {/* Navigation */}
         <div className="hidden items-center gap-7 lg:flex">
           {navLinks.map((link) => (
-            <Link
+            <button
               key={link.label}
-              href={link.href}
+              type="button"
+              onClick={() => handleNavigation(link.href)}
               className="text-[13px] font-medium text-primary-not-selected transition-colors hover:text-primary"
             >
               {link.label}
-            </Link>
+            </button>
           ))}
         </div>
 
