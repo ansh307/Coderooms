@@ -6,7 +6,7 @@ interface Props {
 
 export default function AuthLayout({ children }: Props) {
   return (
-    <main className="min-h-screen bg-[#0A0A0A]">
+    <main className="min-h-screen bg-landing-black">
       <div className="flex">
         {/* Left */}
         <div className="hidden w-1/3 border-r border-white/10 lg:flex">
