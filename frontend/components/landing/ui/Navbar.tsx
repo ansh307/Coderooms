@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Code2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import MobileNav from "./MobileNav";
 
 const navLinks = [
   { label: "Features", href: "/#features" },
@@ -50,13 +51,14 @@ export default function Navbar() {
   };
 
   return (
-    <header
-      className={`fixed left-0 right-0 top-0 z-50 px-4 pt-5 sm:px-6 lg:px-10 transition-all duration-500 ${
-        scrolled ? "pt-5" : "pt-5"
-      }`}
-    >
-      <nav
-        className={`
+    <>
+      <header
+        className={`fixed left-0 right-0 top-0 z-998 px-4 pt-5 sm:px-6 lg:px-10 transition-all duration-500 ${
+          scrolled ? "pt-5" : "pt-5"
+        }`}
+      >
+        <nav
+          className={`
           mx-auto flex items-center justify-between
           border border-border-color
           bg-surface-muted backdrop-blur
@@ -69,61 +71,61 @@ export default function Navbar() {
               : "h-16 max-w-[1350px] rounded-full px-5 shadow-sm"
           }
         `}
-      >
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2.5">
-          <div
-            className={`
+        >
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-2.5">
+            <div
+              className={`
               flex items-center justify-center
               bg-surface-muted
               transition-all duration-500
               ${scrolled ? "h-7 w-7 rounded-full" : "h-8 w-8 rounded-[9px]"}
             `}
-          >
-            <Code2
-              size={scrolled ? 16 : 18}
-              strokeWidth={2}
-              className="text-primary"
-            />
-          </div>
+            >
+              <Code2
+                size={scrolled ? 16 : 18}
+                strokeWidth={2}
+                className="text-primary"
+              />
+            </div>
 
-          <span
-            className={`
+            <span
+              className={`
               font-semibold tracking-[-0.035em] text-primary
               transition-all duration-500
               ${scrolled ? "text-[16px]" : "text-[18px]"}
             `}
-          >
-            CodeRooms
-          </span>
-        </Link>
-
-        {/* Navigation */}
-        <div className="hidden items-center gap-7 lg:flex">
-          {navLinks.map((link) => (
-            <button
-              key={link.label}
-              type="button"
-              onClick={() => handleNavigation(link.href)}
-              className="text-[13px] font-medium text-primary-not-selected transition-colors hover:text-primary"
             >
-              {link.label}
-            </button>
-          ))}
-        </div>
-
-        {/* Actions */}
-        <div className="flex items-center gap-3">
-          <Link
-            href="/login"
-            className="hidden text-[13px] font-medium text-primary-not-selected transition-colors hover:text-primary sm:block"
-          >
-            Sign in
+              CodeRooms
+            </span>
           </Link>
 
-          <Link
-            href="/signup"
-            className={`
+          {/* Navigation */}
+          <div className="hidden items-center gap-7 lg:flex">
+            {navLinks.map((link) => (
+              <button
+                key={link.label}
+                type="button"
+                onClick={() => handleNavigation(link.href)}
+                className="text-[13px] font-medium text-primary-not-selected transition-colors hover:text-primary cursor-pointer"
+              >
+                {link.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Actions */}
+          <div className="flex items-center gap-3">
+            <Link
+              href="/login"
+              className="hidden text-[13px] font-medium text-primary-not-selected transition-colors hover:text-primary sm:block"
+            >
+              Sign in
+            </Link>
+
+            <Link
+              href="/signup"
+              className={`
               inline-flex items-center justify-center
               bg-primary font-medium text-primary-foreground
               transition-all duration-500
@@ -134,11 +136,14 @@ export default function Navbar() {
                   : "h-10 rounded-full px-5 text-[14px]"
               }
             `}
-          >
-            Get started
-          </Link>
-        </div>
-      </nav>
-    </header>
+            >
+              Get started
+            </Link>
+          </div>
+        </nav>
+      </header>
+
+      <MobileNav />
+    </>
   );
 }

@@ -29,67 +29,70 @@ export default function Hero() {
   const heroRef = useRef<HTMLElement>(null);
 
   useLayoutEffect(() => {
-    const ctx = gsap.context(() => {
-      const chars = gsap.utils.toArray<HTMLElement>(".hero-char");
+    const mm = gsap.matchMedia();
 
-      if (!chars.length) return;
+    mm.add(
+      {
+        mobile: "(max-width: 639px)",
+        desktop: "(min-width: 640px)",
+      },
+      (context) => {
+        const { mobile } = context.conditions!;
 
-      /*
-       * Every character travels through the complete path.
-       * We delay each character so they form a continuous stream.
-       */
-      const duration = 8;
-      const stagger = 0.04;
+        const chars = gsap.utils.toArray<HTMLElement>(".hero-char");
 
-      chars.forEach((char, index) => {
-        gsap.fromTo(
-          char,
-          {
-            opacity: 0,
-          },
-          {
-            opacity: 1,
-            duration: 0.5,
+        if (!chars.length) return;
+
+        const duration = 8;
+        const stagger = mobile ? 0.08 : 0.04;
+
+        chars.forEach((char, index) => {
+          gsap.fromTo(
+            char,
+            {
+              opacity: 0,
+            },
+            {
+              opacity: 1,
+              duration: 0.5,
+              delay: index * stagger,
+              ease: "power2.out",
+            },
+          );
+
+          gsap.to(char, {
+            motionPath: {
+              path: "#hero-curve",
+              align: "#hero-curve",
+              alignOrigin: [0.5, 0.5],
+              autoRotate: true,
+              start: 0,
+              end: 1,
+            },
+            duration,
             delay: index * stagger,
-            ease: "power2.out",
-          },
-        );
+            ease: "none",
+            repeat: -1,
+          });
+        });
 
-        gsap.to(char, {
-          motionPath: {
-            path: "#hero-curve",
-            align: "#hero-curve",
-            alignOrigin: [0.5, 0.5],
-            autoRotate: true,
-            start: 0,
-            end: 1,
-          },
-          duration,
-          delay: index * stagger,
+        gsap.to("#hero-curve", {
+          strokeDashoffset: -200,
+          duration: 12,
           ease: "none",
           repeat: -1,
         });
-      });
+      },
+    );
 
-      /*
-       * Animate the dashed curve.
-       */
-      gsap.to("#hero-curve", {
-        strokeDashoffset: -200,
-        duration: 12,
-        ease: "none",
-        repeat: -1,
-      });
-    }, heroRef);
-
-    return () => ctx.revert();
+    return () => mm.revert();
   }, []);
 
   // M -127 315 C 166 26 469 22 804 145 C 1061 244 1455 196 1835 -218
   return (
     <main ref={heroRef} className="relative overflow-hidden">
       {/* Curved animation */}
-      <div className="pointer-events-none absolute left-1/2 top-[175px] z-0 h-[430px] w-[160vw] -translate-x-1/2 sm:top-[185px] sm:h-[450px] lg:top-[245px] lg:h-[500px]">
+      <div className="pointer-events-none absolute left-1/2 top-[150px] z-0 h-[430px] w-[160vw] -translate-x-1/2 sm:top-[185px] sm:h-[450px] lg:top-[245px] lg:h-[500px]">
         <svg
           viewBox="0 0 1600 500"
           className="h-full w-full overflow-visible"
@@ -126,7 +129,7 @@ export default function Hero() {
             ))}
         </div>
       </div>
-      <section className="relative mx-auto flex min-h-[calc(100vh-160px)] max-w-[1180px] flex-col items-center px-5 pb-24 pt-24 text-center sm:px-8 sm:pt-28 lg:pt-48">
+      <section className="relative mx-auto flex min-h-[calc(100vh-300px)] sm:min-h-[calc(100vh-160px)] max-w-[1180px] flex-col items-center px-5 pb-10 pt-32 text-center sm:px-8 sm:pt-32 lg:pt-48">
         {/* Heading */}
         <h1 className="relative z-10 mt-7 max-w-[900px] text-[54px] font-semibold leading-[1.02] tracking-[-0.055em] text-primary sm:text-[72px] lg:text-[88px]">
           Code together.

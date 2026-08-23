@@ -11,28 +11,55 @@ export default function FeaturePreview() {
   const previewRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.to(previewRef.current, {
-        scale: 1,
-        rotateX: 0,
-        y: 0,
-        ease: "none",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top bottom",
-          end: "20% 80%",
-          scrub: 1,
-        },
-      });
-    }, sectionRef);
+    const mm = gsap.matchMedia();
 
-    return () => ctx.revert();
+    mm.add(
+      {
+        mobile: "(max-width: 639px)",
+        desktop: "(min-width: 640px)",
+      },
+      (context) => {
+        const { mobile } = context.conditions!;
+
+        if (mobile) {
+          // Mobile animation
+          gsap.to(previewRef.current, {
+            scale: 1,
+            rotateX: 0,
+            y: 0,
+            ease: "none",
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: "top 70%",
+              end: "top 40%",
+              scrub: 1,
+            },
+          });
+        } else {
+          // sm+ animation
+          gsap.to(previewRef.current, {
+            scale: 1,
+            rotateX: 0,
+            y: 0,
+            ease: "none",
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: "top bottom",
+              end: "20% 80%",
+              scrub: 1,
+            },
+          });
+        }
+      },
+    );
+
+    return () => mm.revert();
   }, []);
 
   return (
     <section
       ref={sectionRef}
-      className="w-full px-6 sm:pb-32 pt-8 sm:px-8 lg:px-16"
+      className="w-full px-6 pt-8 sm:px-8 sm:pb-32 lg:px-16"
     >
       <div className="mx-auto max-w-[1350px]" style={{ perspective: "1400px" }}>
         <div
@@ -41,20 +68,16 @@ export default function FeaturePreview() {
           style={{
             transformStyle: "preserve-3d",
             transformOrigin: "center bottom",
-
-            // Initial state is applied BEFORE the browser paints.
             transform:
               "perspective(1400px) rotateX(18deg) scale(0.82) translateY(80px)",
           }}
         >
-          {/* Light */}
           <img
             src="/feature-preview-image.png"
             alt="CodeRooms collaborative coding workspace"
             className="block h-auto w-full dark:hidden"
           />
 
-          {/* Dark */}
           <img
             src="/feature-preview-image-dark.png"
             alt="CodeRooms collaborative coding workspace"
