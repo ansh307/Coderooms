@@ -21,10 +21,26 @@ const { client } = require('./metrics/metrics.js');
 
 const app = express();
 
-app.use(cors({
-    origin: "http://localhost:3000",
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://coderooms-main.vercel.app",
+  "https://coderooms.anshjz.in",
+];
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Allow requests with no origin (e.g. Postman, server-to-server)
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
-  }))
+  })
+);
+
 app.use(helmet());
 app.use(express.json())
 app.use(cookieParser());
