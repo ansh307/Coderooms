@@ -115,9 +115,9 @@ export default function VerifyEmail() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg- px-4">
+    <div className="flex min-h-screen items-center justify-center bg-red- px-2 sm:px-4">
       <div className="w-full max-w-md">
-        <div className="rounded-xl p-8 shadow-2xl">
+        <div className="rounded-xl sm:p-8">
           {/* Icon */}
           <div className="text-center">
             <div

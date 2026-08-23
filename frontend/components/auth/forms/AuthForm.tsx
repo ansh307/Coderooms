@@ -70,19 +70,19 @@ export default function AuthForm({
   }
   return (
     <AuthCard>
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
         <div>
-          <h1 className="text-3xl font-semibold text-white">
+          <h1 className="text-2xl font-semibold text-white sm:text-3xl">
             {isSignup ? "Create account" : "Sign in"}
           </h1>
 
-          <p className="mt-2 text-sm text-zinc-400">
+          <p className="mt-2 text-sm leading-6 text-zinc-400">
             {isSignup ? (
               <>
                 Already have an account?{" "}
                 <Link
                   href="/login"
-                  className="text-indigo-400 hover:text-indigo-300"
+                  className="text-indigo-400 transition-colors hover:text-indigo-300"
                 >
                   Sign in
                 </Link>
@@ -92,7 +92,7 @@ export default function AuthForm({
                 New to CodeRooms?{" "}
                 <Link
                   href="/signup"
-                  className="text-indigo-400 hover:text-indigo-300"
+                  className="text-indigo-400 transition-colors hover:text-indigo-300"
                 >
                   Create an account
                 </Link>
@@ -104,7 +104,7 @@ export default function AuthForm({
         {isSignup && (
           <div className="space-y-4">
             <Input
-              autoComplete="username"
+              autoComplete="name"
               label="Full Name"
               name="name"
               placeholder="John Doe"
@@ -135,17 +135,20 @@ export default function AuthForm({
                 name="gender"
                 value={form.gender}
                 onChange={handleChange}
-                className="h-11 mt-1 w-full rounded-md border border-white/10 bg-[#181818] px-4 text-white/60 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30"
+                className="mt-1 h-11 w-full rounded-md border border-white/10 bg-[#181818] px-3 text-sm text-white outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30 sm:px-4"
               >
                 <option value="" className="bg-[#181818] text-white/60">
                   Select Gender
                 </option>
+
                 <option value="male" className="bg-[#181818] text-white">
                   Male
                 </option>
+
                 <option value="female" className="bg-[#181818] text-white">
                   Female
                 </option>
+
                 <option value="other" className="bg-[#181818] text-white">
                   Other
                 </option>
@@ -173,7 +176,7 @@ export default function AuthForm({
         />
 
         {isSignup && emailSent && (
-          <p className="text-center text-xs text-zinc-500">
+          <p className="px-1 text-center text-xs leading-5 text-zinc-500">
             We&apos;ve sent you a verification link to your email address.
             Please check your inbox and click the link to verify your account.
           </p>
@@ -183,7 +186,7 @@ export default function AuthForm({
           <div className="flex justify-end">
             <Link
               href="/forgot-password"
-              className="text-sm text-indigo-400 hover:text-indigo-300"
+              className="text-sm text-indigo-400 transition-colors hover:text-indigo-300"
             >
               Forgot password?
             </Link>
@@ -194,19 +197,25 @@ export default function AuthForm({
           {isSignup ? "Create Account" : "Sign In"}
         </Button>
 
-        {/* {isSignup && (
-          <p className="text-center text-xs text-zinc-500">
+        {isSignup && (
+          <p className="px-1 text-center text-xs leading-5 text-zinc-500">
             By creating an account you agree to our{" "}
-            <Link href="/terms" className="text-indigo-400">
+            <Link
+              href="/terms"
+              className="text-indigo-400 transition-colors hover:text-indigo-300"
+            >
               Terms
             </Link>{" "}
             and{" "}
-            <Link href="/privacy" className="text-indigo-400">
+            <Link
+              href="/privacy"
+              className="text-indigo-400 transition-colors hover:text-indigo-300"
+            >
               Privacy Policy
             </Link>
             .
           </p>
-        )} */}
+        )}
       </form>
     </AuthCard>
   );
