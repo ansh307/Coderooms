@@ -32,7 +32,7 @@ export default function Contact() {
       </section>
 
       {/* Contact */}
-      <section className="w-full  px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
+      <section className="w-full  px-5 pt-16 pb-10 sm:py-20 sm:px-8 lg:px-12 lg:py-28">
         <div className="mx-auto grid max-w-[1180px] grid-cols-1 gap-16 lg:grid-cols-[0.7fr_1.3fr] lg:gap-24">
           {/* Info */}
           <div>

@@ -26,7 +26,7 @@ export default function HowItWorks() {
   return (
     <section
       id="how-it-works"
-      className="w-full px-5 py-24 sm:px-8 lg:px-12 lg:py-24"
+      className="w-full px-5 py-10 sm:py-24 sm:px-8 lg:px-12 lg:py-24"
     >
       <div className="mx-auto max-w-[1180px]">
         {/* Header */}
@@ -70,7 +70,7 @@ export default function HowItWorks() {
                       </div>
 
                       {/* Title */}
-                      <h3 className="text-[20px] font-semibold tracking-[-0.03em] dark:translate-y-15 dark:group-hover:translate-y-0 transition-transform duration-300  text-primary-heading">
+                      <h3 className="text-[20px] font-semibold tracking-[-0.03em] dark:translate-y-0 sm:dark:translate-y-15 sm:dark:group-hover:translate-y-0 transition-transform duration-300  text-primary-heading">
                         {step.title}
                       </h3>
 
@@ -78,8 +78,9 @@ export default function HowItWorks() {
                       <p
                         className="mt-3 max-w-[260px] text-[15px] leading-[1.65] 
                             transition-opacity duration-500
-                            dark:opacity-0
-                            dark:group-hover:opacity-100"
+                            dark:opacity-100
+                            sm:dark:opacity-0
+                            sm:dark:group-hover:opacity-100"
                       >
                         {step.description}
                       </p>

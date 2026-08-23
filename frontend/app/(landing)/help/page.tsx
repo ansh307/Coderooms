@@ -122,7 +122,7 @@ export default function Help() {
   return (
     <main className="relative">
       {/* Hero */}
-      <section className="mx-auto max-w-[1180px] px-5 pb-20 pt-24 text-center sm:px-8 sm:pt-28 lg:pb-28 lg:pt-44">
+      <section className="mx-auto max-w-[1180px] px-5 pb-20 pt-28 text-center sm:px-8 sm:pt-28 lg:pb-28 lg:pt-44">
         <p className="text-[12px] font-medium uppercase tracking-[0.1em] text-gray-light">
           Help center
         </p>

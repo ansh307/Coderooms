@@ -74,9 +74,9 @@ export default function Footer() {
 
   return (
     <footer className="border-t border-border-color">
-      <div className="mx-auto max-w-[1180px] ">
+      <div className="mx-auto max-w-[1180px] px-6 sm:px-8 lg:px-0">
         {/* Main */}
-        <div className="grid gap-14 py-16 lg:grid-cols-[1.8fr_repeat(4,1fr)] lg:gap-10 lg:py-20">
+        <div className="grid gap-10 py-12 sm:gap-12 sm:py-16 lg:grid-cols-[1.8fr_repeat(4,1fr)] lg:gap-10 lg:py-20">
           {/* Brand */}
           <div className="max-w-[280px]">
             <Link href="/" className="inline-flex items-center gap-3">
@@ -89,36 +89,38 @@ export default function Footer() {
               </span>
             </Link>
 
-            <p className="mt-6 text-[15px] leading-[1.7] text-gray-muted">
+            <p className="mt-5 text-[15px] leading-[1.7] text-gray-muted">
               A real-time collaborative coding environment for developers.
             </p>
           </div>
 
           {/* Links */}
-          {Object.entries(footerLinks).map(([title, links]) => (
-            <div key={title}>
-              <h3 className="text-[11px] font-semibold uppercase tracking-[0.14em] text-gray-light">
-                {title}
-              </h3>
+          <div className="grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-4 lg:contents">
+            {Object.entries(footerLinks).map(([title, links]) => (
+              <div key={title}>
+                <h3 className="text-[11px] font-semibold uppercase tracking-[0.14em] text-gray-light">
+                  {title}
+                </h3>
 
-              <ul className="mt-5 space-y-3.5">
-                {links.map((link) => (
-                  <li key={link.label}>
-                    <Link
-                      href={link.href}
-                      className="text-[14px] text-gray-muted transition-colors hover:text-primary"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+                <ul className="mt-4 space-y-3">
+                  {links.map((link) => (
+                    <li key={link.label}>
+                      <Link
+                        href={link.href}
+                        className="text-[14px] text-gray-muted transition-colors hover:text-primary"
+                      >
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Bottom */}
-        <div className="flex flex-col gap-5 border-t border-border-color py-6 sm:flex-row sm:items-center sm:justify-between py-10">
+        <div className="flex flex-col gap-4 border-t border-border-color py-6 sm:flex-row sm:items-center sm:justify-between sm:py-10">
           <p className="text-[13px] text-gray-muted">
             © {new Date().getFullYear()} CodeRooms.
           </p>

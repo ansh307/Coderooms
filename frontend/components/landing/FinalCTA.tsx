@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function FinalCTA() {
   return (
-    <section className="w-full px-5 py-24 sm:px-8 lg:pt-14 pb-32">
+    <section className="w-full px-5 py-10 sm:py-24 sm:px-8 lg:pt-14 pb-32">
       <div className="mx-auto max-w-[760px] text-center">
         {/* Heading */}
         <h2 className="mt-7 text-[40px] font-semibold leading-[1.08] tracking-[-0.045em] text-primary sm:text-[48px] lg:text-[52px]">

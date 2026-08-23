@@ -72,7 +72,7 @@ export default function ComingSoon({
         </div>
 
         {/* Bottom detail */}
-        <div className="mx-auto mt-20 flex max-w-[420px] items-center justify-center gap-3 border-t border-border-color pt-6 text-[13px] text-gray-muted">
+        <div className="mx-auto sm:mt-20 flex max-w-[420px] items-center justify-center gap-3 sm:border-t sm:border-border-color pt-6 text-[13px] text-gray-muted">
           <span className="h-1.5 w-1.5 rounded-full bg-primary" />
 
           <span>We’re building it with care.</span>

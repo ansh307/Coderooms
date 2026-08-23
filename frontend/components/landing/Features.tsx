@@ -74,7 +74,7 @@ export default function Features() {
   return (
     <section
       id="features"
-      className="w-full px-5 py-24 sm:px-8 lg:px-12 lg:py-28"
+      className="w-full px-5 pt-16 pb-10 sm:py-24 sm:px-8 lg:px-12 lg:py-28"
     >
       <div className="mx-auto max-w-[1180px]">
         {/* Header */}
@@ -100,20 +100,23 @@ export default function Features() {
           {features.map((feature, index) => {
             const Icon = feature.icon;
 
-            const isSecondColumn = index % 4 !== 0;
-            const isSecondRow = index >= 4;
-
             return (
               <div
                 key={feature.number}
                 className={[
                   "group relative min-h-[245px] py-10",
+
+                  // Desktop — KEEP EXISTING LAYOUT
                   "lg:px-8 lg:py-11",
                   index % 4 !== 0 ? "lg:border-l lg:border-border-color" : "",
-                  isSecondRow ? "border-t border-border-color lg:border-t" : "",
-                  index % 2 !== 0
-                    ? "sm:border-l sm:border-border-color lg:border-l"
-                    : "",
+                  index >= 4 ? "lg:border-t lg:border-border-color" : "",
+
+                  // Tablet / small — 2 columns
+                  index % 2 !== 0 ? "sm:border-l sm:border-border-color" : "",
+                  index >= 2 ? "sm:border-t sm:border-border-color" : "",
+
+                  // Mobile — 1 column
+                  index > 0 ? "border-t border-border-color" : "",
                 ].join(" ")}
               >
                 {/* Number + Icon */}
@@ -125,17 +128,18 @@ export default function Features() {
 
                 {/* Content */}
                 <div className="mt-10">
-                  <h3 className="text-[18px] font-semibold tracking-[-0.03em] dark:translate-y-20 dark:group-hover:translate-y-0 transition-transform duration-300  text-primary-heading">
+                  <h3 className="text-[18px] font-semibold tracking-[-0.03em] text-primary-heading transition-transform duration-300 dark:translate-y-0 sm:dark:translate-y-20 sm:dark:group-hover:translate-y-0">
                     {feature.title}
                   </h3>
 
                   <p
                     className="
-                      mt-3 max-w-[235px] text-[14px] leading-[1.7] text-gray-muted
-                      transition-opacity duration-500
-                      dark:opacity-0
-                      dark:group-hover:opacity-100
-                    "
+              mt-3 max-w-[235px] text-[14px] leading-[1.7] text-gray-muted
+              transition-opacity duration-500
+              dark:opacity-100
+              sm:dark:opacity-0
+              sm:dark:group-hover:opacity-100
+            "
                   >
                     {feature.description}
                   </p>

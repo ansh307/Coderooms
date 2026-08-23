@@ -113,37 +113,53 @@ export default function Terms() {
   return (
     <main className="relative">
       {/* Header */}
-      <section className="mx-auto max-w-[1180px] px-5 pb-20 pt-24 sm:px-8 sm:pt-28 lg:pb-24 lg:pt-44">
+      <section className="mx-auto max-w-[1180px] px-5 pb-16 pt-28 sm:px-8 sm:pb-20 sm:pt-28 lg:pb-24 lg:pt-44">
         <div className="max-w-[850px]">
-          <p className="text-[12px] font-medium uppercase tracking-[0.1em] text-gray-light">
+          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-light sm:text-[12px]">
             Legal
           </p>
 
-          <h1 className="mt-7 text-[52px] font-semibold leading-[1.02] tracking-[-0.055em] text-primary sm:text-[70px] lg:text-[82px]">
+          <h1 className="mt-5 text-[44px] font-semibold leading-[1.02] tracking-[-0.055em] text-primary sm:mt-7 sm:text-[70px] lg:text-[82px]">
             Terms of Service
           </h1>
 
-          <p className="mt-7 max-w-[620px] text-[18px] leading-[1.65] tracking-[-0.015em] text-primary-heading sm:text-[20px]">
+          <p className="mt-6 max-w-[620px] text-[17px] leading-[1.65] tracking-[-0.015em] text-primary-heading sm:mt-7 sm:text-[20px]">
             These terms explain the rules and responsibilities that apply when
             you use our service.
           </p>
 
-          <div className="mt-8 flex items-center gap-3 text-[13px] text-gray-muted">
-            <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-            Last updated: August 22, 2026
+          <div className="mt-7 flex items-center gap-3 text-[12px] text-gray-muted sm:mt-8 sm:text-[13px]">
+            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+            <span>Last updated: August 22, 2026</span>
           </div>
         </div>
       </section>
 
       {/* Terms */}
-      <section className="w-full  px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
-        <div className="mx-auto grid max-w-[1180px] grid-cols-1 gap-16 lg:grid-cols-[0.55fr_1.45fr] lg:gap-24">
+      <section className="w-full px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-28">
+        <div className="mx-auto grid max-w-[1180px] grid-cols-1 gap-12 sm:gap-16 lg:grid-cols-[0.55fr_1.45fr] lg:gap-24">
           {/* Sidebar */}
           <aside className="lg:sticky lg:top-40 lg:self-start">
-            <p className="text-[12px] font-medium uppercase tracking-[0.1em] text-gray-light">
+            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-light sm:text-[12px]">
               On this page
             </p>
 
+            {/* Mobile */}
+            <div className="mt-5 space-y-3 lg:hidden">
+              {sections.map((section) => (
+                <a
+                  key={section.title}
+                  href={`#${section.title
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]+/g, "-")}`}
+                  className="block text-[13px] leading-[1.5] text-gray-muted transition-colors hover:text-primary"
+                >
+                  {section.title}
+                </a>
+              ))}
+            </div>
+
+            {/* Desktop */}
             <nav className="mt-6 hidden space-y-3 lg:block">
               {sections.map((section) => (
                 <a
@@ -161,27 +177,31 @@ export default function Terms() {
 
           {/* Content */}
           <article className="max-w-[720px]">
-            <div className="mb-12 border-b border-border-color pb-10">
-              <p className="text-[16px] leading-[1.75] text-primary-heading">
+            <div className="mb-10 border-b border-border-color pb-8 sm:mb-12 sm:pb-10">
+              <p className="text-[15px] leading-[1.75] text-primary-heading sm:text-[16px]">
                 By using our service, you agree to these Terms of Service.
                 Please read them carefully before creating an account or using
                 any collaborative coding features.
               </p>
             </div>
 
-            <div className="space-y-14">
+            <div className="space-y-12 sm:space-y-14">
               {sections.map((section) => {
                 const id = section.title
                   .toLowerCase()
                   .replace(/[^a-z0-9]+/g, "-");
 
                 return (
-                  <section key={section.title} id={id}>
-                    <h2 className="text-[21px] font-semibold tracking-[-0.025em] text-primary-heading sm:text-[23px]">
+                  <section
+                    key={section.title}
+                    id={id}
+                    className="scroll-mt-24 lg:scroll-mt-40"
+                  >
+                    <h2 className="text-[20px] font-semibold tracking-[-0.025em] text-primary-heading sm:text-[23px]">
                       {section.title}
                     </h2>
 
-                    <div className="mt-5 space-y-4">
+                    <div className="mt-4 space-y-4 sm:mt-5">
                       {section.content.map((paragraph) => (
                         <p
                           key={paragraph}
@@ -200,8 +220,8 @@ export default function Terms() {
       </section>
 
       {/* Footer CTA */}
-      <section className="mx-auto max-w-[1180px] px-5 py-24 sm:px-8 lg:py-32">
-        <div className="flex flex-col justify-between gap-8 pt-8 sm:flex-row sm:items-center">
+      <section className="mx-auto max-w-[1180px] px-5 pt-10 pb-10 sm:px-8 sm:py-24 lg:py-32">
+        <div className="flex flex-col justify-between gap-7 pt-6 sm:flex-row sm:items-center sm:gap-8 sm:pt-8">
           <div>
             <p className="text-[14px] font-medium text-primary-heading">
               Have questions about these terms?
@@ -214,7 +234,7 @@ export default function Terms() {
 
           <a
             href="mailto:hello@example.com"
-            className="group inline-flex items-center gap-3 text-[15px] font-medium text-primary-heading"
+            className="group inline-flex w-fit items-center gap-3 text-[15px] font-medium text-primary-heading"
           >
             <span className="border-b border-border-color pb-1 transition-colors group-hover:border-primary group-hover:text-primary">
               Contact us

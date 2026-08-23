@@ -143,7 +143,7 @@ export default function Pricing() {
               "rounded-full px-5 py-2 text-[13px] font-medium transition-all",
               !yearly
                 ? "bg-primary text-primary-foreground shadow-sm"
-                : "text-gray-muted hover:text-primary",
+                : "text-gray-light hover:text-primary",
             ].join(" ")}
           >
             Monthly
@@ -176,8 +176,8 @@ export default function Pricing() {
                 className={[
                   "relative flex flex-col rounded-2xl border p-7 sm:p-8  transition-transform duration-200",
                   plan.popular
-                    ? "border-border-color bg-surface scale-105 "
-                    : "border-border-color bg-surface hover:scale-105",
+                    ? "border-border-color bg-surface sm:scale-105 "
+                    : "border-border-color bg-surface sm:hover:scale-105",
                 ].join(" ")}
               >
                 {plan.popular && (

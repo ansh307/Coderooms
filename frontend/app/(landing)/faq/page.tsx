@@ -47,7 +47,7 @@ export default function FAQ() {
   return (
     <section
       id="faq"
-      className="w-full  px-5 py-24 sm:px-8 lg:px-12 lg:pt-48 lg:pb-40"
+      className="w-full  px-5 py-28 sm:px-8 lg:px-12 lg:pt-48 lg:pb-40"
     >
       <div className="mx-auto grid max-w-[1180px] grid-cols-1 gap-16 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24">
         {/* Header */}

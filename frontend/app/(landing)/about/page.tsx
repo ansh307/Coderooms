@@ -24,7 +24,7 @@ const values = [
 
 export default function About() {
   return (
-    <main className="relative ">
+    <main className="relative">
       {/* Intro */}
       <section className="mx-auto max-w-[1180px] px-5 pb-24 pt-24 sm:px-8 sm:pt-28 lg:pb-32 lg:pt-44">
         <div className="max-w-[900px]">
@@ -42,10 +42,10 @@ export default function About() {
       </section>
 
       {/* Story */}
-      <section className="w-full px-5 py-24 sm:px-8 lg:px-12 lg:py-36">
+      <section className="w-full px-5 pt-16 pb-10 sm:py-24 sm:px-8 lg:px-12 lg:py-36">
         <div className="mx-auto grid max-w-[1180px] grid-cols-1 gap-14 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24">
           <div>
-            <p className="text-[108px] font-semibold  leading-[1.02] tracking-[-0.055em] text-gray-light">
+            <p className="text-[72px] lg:text-[108px] font-semibold  leading-[1.02] tracking-[-0.055em] text-gray-light">
               Why we started?
             </p>
           </div>

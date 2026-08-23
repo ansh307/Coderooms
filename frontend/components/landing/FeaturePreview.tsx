@@ -32,7 +32,7 @@ export default function FeaturePreview() {
   return (
     <section
       ref={sectionRef}
-      className="w-full px-6 pb-32 pt-8 sm:px-8 lg:px-16"
+      className="w-full px-6 sm:pb-32 pt-8 sm:px-8 lg:px-16"
     >
       <div className="mx-auto max-w-[1350px]" style={{ perspective: "1400px" }}>
         <div
